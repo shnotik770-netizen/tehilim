@@ -2,6 +2,20 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700&family=Noto+Serif+Hebrew:wght@400;700&family=Noto+Sans+Hebrew:wght@400;700&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: 'Keter YG';
+  src: url('https://cdn.jsdelivr.net/gh/unicode-cookbook/fonts@main/KeterYG/KeterYG.woff2') format('woff2');
+  font-weight: normal; font-style: normal;
+}
+@font-face {
+  font-family: 'Taamey Frank CLM';
+  src: url('https://cdn.jsdelivr.net/gh/unicode-cookbook/fonts@main/TaameyFrankCLM/TaameyFrankCLM.woff2') format('woff2');
+  font-weight: normal; font-style: normal;
+}
+</style>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>תהילים אישיים</title>
 <style>
@@ -11,7 +25,7 @@
   --text:#1a1208;--text2:#555;--radius:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Ezra SIL',David,Arial,sans-serif;background:var(--bg);color:var(--text);direction:rtl;min-height:100vh}
+body{font-family:'Keter YG','Frank Ruhl Libre',David,Arial,serif;background:var(--bg);color:var(--text);direction:rtl;min-height:100vh}
 /* NAV */
 nav{background:var(--blue);color:white;padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
 nav .logo{font-size:1.1rem;font-weight:700;color:var(--gold-light)}
@@ -74,15 +88,15 @@ nav .nav-links button.active,nav .nav-links button:hover{background:var(--gold);
 /* VIEWER */
 .viewer-wrap{margin-top:.8rem}
 .pasuk-block{border-right:3px solid var(--gold);padding:.6rem .8rem;margin-bottom:.9rem;background:#fafaf8;border-radius:0 6px 6px 0}
-.pasuk-num{font-size:.7rem;color:var(--gold);font-weight:700;margin-bottom:.2rem}
-.pasuk-text{font-size:1.05rem;line-height:1.9;color:var(--text);margin-bottom:.4rem}
+.pasuk-num{font-size:.7em;color:var(--gold);font-weight:700;margin-bottom:.2rem}
+.pasuk-text{font-size:1.05em;line-height:1.9;color:var(--text);margin-bottom:.4rem;font-weight:700}
 .comm-item{margin-bottom:.3rem;padding:.35rem .6rem;border-radius:4px}
 .comm-item.rashi{background:#f0f4ff}.comm-item.metzudot{background:#f0fff4}
 .comm-item.radak{background:#fff8f0}.comm-item.ibnezra{background:#fdf0ff}
-.comm-label{font-size:.68rem;font-weight:700;margin-bottom:2px}
+.comm-label{font-size:.68em;font-weight:700;margin-bottom:2px}
 .comm-label.rashi{color:#2244aa}.comm-label.metzudot{color:#227744}
 .comm-label.radak{color:#aa6622}.comm-label.ibnezra{color:#882299}
-.comm-text{font-size:.85rem;line-height:1.7;color:#333}
+.comm-text{font-size:.85em;line-height:1.7;color:#333}
 .toggle-bar{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.7rem;align-items:center}
 .tog-btn{padding:4px 11px;border:1px solid var(--border);border-radius:12px;cursor:pointer;font-size:.75rem;background:white;font-family:inherit}
 .tog-btn.on{background:var(--blue);color:white;border-color:var(--blue)}
@@ -91,6 +105,33 @@ nav .nav-links button.active,nav .nav-links button:hover{background:var(--gold);
 .share-row{display:flex;gap:.5rem;align-items:center;margin-bottom:.6rem;flex-wrap:wrap}
 .share-link{font-size:.72rem;color:#888;direction:ltr;word-break:break-all;text-align:left;flex:1}
 .copy-btn{padding:3px 9px;font-size:.72rem;background:#f0f0f0;border:1px solid #ccc;border-radius:4px;cursor:pointer;font-family:inherit}
+/* FONT CONTROLS */
+.font-controls{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;margin-bottom:.7rem;padding:.5rem .7rem;background:#f5f5f0;border-radius:7px;border:1px solid var(--border)}
+.font-controls .fc-label{font-size:.72rem;color:var(--text2);white-space:nowrap}
+.font-size-btn{width:28px;height:28px;border:1px solid var(--border);background:white;border-radius:5px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;font-family:inherit;padding:0}
+.font-size-btn:hover{background:var(--blue);color:white;border-color:var(--blue)}
+.font-select{padding:4px 8px;border:1px solid #ccc;border-radius:5px;font-size:.78rem;font-family:inherit;background:white}
+/* CHAPTER COMMENTARY */
+.chapter-comm-bar{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.8rem;padding:.6rem;background:#faf8f0;border:1px solid #e8d99a;border-radius:8px}
+.ch-comm-btn{padding:5px 12px;border:1px solid #c9a84c;background:white;color:#7a5a00;border-radius:15px;cursor:pointer;font-size:.78rem;font-family:inherit;font-weight:600;transition:all .15s}
+.ch-comm-btn:hover,.ch-comm-btn.on{background:var(--gold);color:var(--blue);border-color:var(--gold)}
+.chapter-comm-block{background:#fffdf0;border:1px solid #e8d99a;border-radius:8px;padding:.9rem 1rem;margin-bottom:1rem}
+.chapter-comm-block .comm-title{font-size:.8rem;font-weight:700;color:#7a5a00;margin-bottom:.5rem;border-bottom:1px solid #e8d99a;padding-bottom:.4rem}
+.chapter-comm-block .comm-body{font-size:.92em;line-height:1.9;color:var(--text)}
+.chapter-comm-block .comm-sources{font-size:.72em;color:#999;margin-top:.5rem;font-style:italic}
+/* PRIMARY / SECONDARY ACTIONS */
+.ch-actions-primary{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.4rem}
+.ch-actions-secondary{display:flex;gap:.3rem;flex-wrap:wrap}
+.ch-actions-secondary button{padding:3px 9px;font-size:.72rem;border-radius:4px;cursor:pointer;font-family:inherit;border:1px solid var(--border);background:#f8f8f8;color:#666}
+.ch-actions-secondary button:hover{background:#eee}
+.ch-actions-secondary button.del-btn:hover{background:#fff0f0;color:#c00;border-color:#fcc}
+.btn-primary-action{padding:7px 16px;background:var(--blue);color:white;border:none;border-radius:6px;cursor:pointer;font-size:.85rem;font-family:inherit;font-weight:600}
+.btn-primary-action:hover{background:#2A5A8C}
+.btn-secondary-action{padding:7px 16px;background:white;color:var(--blue);border:1px solid var(--blue);border-radius:6px;cursor:pointer;font-size:.85rem;font-family:inherit;font-weight:600}
+.btn-secondary-action:hover{background:var(--blue);color:white}
+/* METZUDOT SPLIT */
+.comm-item.metzudot-david{background:#f0fff4}.comm-item.metzudot-zion{background:#e8faf0}
+.comm-label.metzudot-david{color:#227744}.comm-label.metzudot-zion{color:#1a6635}
 /* COLLAPSIBLE */
 .collapse-wrap{margin-top:.6rem}
 .collapse-btn{width:100%;text-align:right;padding:7px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:.85rem;color:var(--blue);font-family:inherit;font-weight:600;display:flex;justify-content:space-between;align-items:center}
@@ -125,22 +166,36 @@ hr{border:none;border-top:1px solid var(--border);margin:.8rem 0}
       <button class="date-tab" onclick="switchDateType('heb')">עברי</button>
     </div>
     <div id="row-greg" class="date-row active">
-      <div class="field"><label>תאריך</label><input type="date" id="greg-date" value="1995-04-26"></div>
+      <div class="field"><label>תאריך</label><input type="date" id="greg-date" value=""></div>
     </div>
     <div id="row-heb" class="date-row">
-      <div class="field"><label>יום</label><input type="number" id="heb-day" min="1" max="30" value="26" style="width:65px"></div>
+      <div class="field"><label>יום</label>
+        <select id="heb-day" style="width:70px">
+          <option value="1">א׳</option><option value="2">ב׳</option><option value="3">ג׳</option><option value="4">ד׳</option><option value="5">ה׳</option>
+          <option value="6">ו׳</option><option value="7">ז׳</option><option value="8">ח׳</option><option value="9">ט׳</option><option value="10">י׳</option>
+          <option value="11">י״א</option><option value="12">י״ב</option><option value="13">י״ג</option><option value="14">י״ד</option><option value="15">ט״ו</option>
+          <option value="16">ט״ז</option><option value="17">י״ז</option><option value="18">י״ח</option><option value="19">י״ט</option><option value="20">כ׳</option>
+          <option value="21">כ״א</option><option value="22">כ״ב</option><option value="23">כ״ג</option><option value="24">כ״ד</option><option value="25">כ״ה</option>
+          <option value="26">כ״ו</option><option value="27">כ״ז</option><option value="28">כ״ח</option><option value="29">כ״ט</option><option value="30">ל׳</option>
+        </select>
+      </div>
       <div class="field"><label>חודש</label>
         <select id="heb-month">
           <option value="Tishrei">תשרי</option><option value="Cheshvan">חשון</option>
           <option value="Kislev">כסלו</option><option value="Tevet">טבת</option>
           <option value="Sh'vat">שבט</option><option value="Adar">אדר</option>
           <option value="Adar I">אדר א׳</option><option value="Adar II">אדר ב׳</option>
-          <option value="Nisan" selected>ניסן</option><option value="Iyar">אייר</option>
+          <option value="Nisan">ניסן</option><option value="Iyar">אייר</option>
           <option value="Sivan">סיון</option><option value="Tamuz">תמוז</option>
           <option value="Av">אב</option><option value="Elul">אלול</option>
         </select>
       </div>
-      <div class="field"><label>שנה</label><input type="number" id="heb-year" value="5755" min="5000" max="6000" style="width:80px"></div>
+      <div class="field"><label>שנה</label>
+        <div style="display:flex;gap:.3rem;align-items:center">
+          <input type="number" id="heb-year" placeholder="שנה" min="5000" max="6000" style="width:80px;padding:7px 10px;border:1px solid #ccc;border-radius:6px;font-size:.9rem;font-family:inherit">
+          <span id="heb-year-letters" style="font-size:.8rem;color:var(--blue);min-width:40px"></span>
+        </div>
+      </div>
     </div>
     <div style="display:flex;gap:.5rem;margin-top:.7rem;align-items:center">
       <button class="btn-primary" onclick="doSearch()">&#x2190; חשב</button>
@@ -192,7 +247,7 @@ hr{border:none;border-top:1px solid var(--border);margin:.8rem 0}
     <div class="form-row">
       <div style="display:flex;align-items:center;gap:.4rem">
         <input type="checkbox" id="af-alert" style="width:16px;height:16px">
-        <label for="af-alert" style="font-size:.82rem">התראה ראש חודש (עתידי)</label>
+        <label for="af-alert" style="font-size:.82rem">התראה ראש חודש <span style="color:#999;font-size:.75rem">(לא עובד עדיין)</span></label>
       </div>
     </div>
     <div style="display:flex;gap:.5rem;margin-top:.3rem">
@@ -203,6 +258,54 @@ hr{border:none;border-top:1px solid var(--border);margin:.8rem 0}
 
   <div id="chapters-list"></div>
   <div id="personal-loading" class="loading" style="display:none">&#x23F3; טוען...</div>
+</div>
+
+<!-- EDIT MODAL -->
+<div id="edit-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem">
+  <div style="background:white;max-width:420px;width:100%;border-radius:var(--radius);overflow:hidden">
+    <div style="background:var(--blue);color:white;padding:.8rem 1rem;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-weight:700;color:var(--gold-light)">עריכת פרק</div>
+      <button onclick="closeEditModal()" style="background:none;border:none;color:white;font-size:1.3rem;cursor:pointer">&#x2715;</button>
+    </div>
+    <div id="viewer-panel" style="padding:1rem;font-family:'Keter YG','Frank Ruhl Libre',serif;font-size:16px">
+      <div class="form-row" style="margin-bottom:.6rem">
+        <div><span class="form-label">שם</span><input type="text" id="em-name" style="width:100%;padding:7px;border:1px solid #ccc;border-radius:5px;font-family:inherit"></div>
+      </div>
+      <div class="form-row" style="margin-bottom:.6rem">
+        <div><span class="form-label">סוג תאריך</span>
+          <select id="em-dtype" onchange="toggleEditDateType()" style="padding:6px;border:1px solid #ccc;border-radius:5px;font-family:inherit">
+            <option value="greg">לועזי</option><option value="heb">עברי</option>
+          </select>
+        </div>
+      </div>
+      <div id="em-greg-row" class="form-row" style="margin-bottom:.6rem">
+        <div><span class="form-label">תאריך לועזי</span><input type="date" id="em-greg" style="padding:6px;border:1px solid #ccc;border-radius:5px;font-family:inherit"></div>
+      </div>
+      <div id="em-heb-row" class="form-row" style="display:none;margin-bottom:.6rem;gap:.4rem">
+        <div><span class="form-label">יום</span><input type="number" id="em-hd" min="1" max="30" style="width:60px;padding:6px;border:1px solid #ccc;border-radius:5px;font-family:inherit"></div>
+        <div><span class="form-label">חודש</span>
+          <select id="em-hm" style="padding:6px;border:1px solid #ccc;border-radius:5px;font-family:inherit">
+            <option value="Tishrei">תשרי</option><option value="Cheshvan">חשון</option>
+            <option value="Kislev">כסלו</option><option value="Tevet">טבת</option>
+            <option value="Sh'vat">שבט</option><option value="Adar">אדר</option>
+            <option value="Adar I">אדר א'</option><option value="Adar II">אדר ב'</option>
+            <option value="Nisan">ניסן</option><option value="Iyar">אייר</option>
+            <option value="Sivan">סיון</option><option value="Tamuz">תמוז</option>
+            <option value="Av">אב</option><option value="Elul">אלול</option>
+          </select>
+        </div>
+        <div><span class="form-label">שנה</span><input type="number" id="em-hy" min="5000" max="6000" style="width:75px;padding:6px;border:1px solid #ccc;border-radius:5px;font-family:inherit"></div>
+      </div>
+      <div class="form-row" style="margin-bottom:.8rem;align-items:center;gap:.4rem">
+        <input type="checkbox" id="em-alert" style="width:16px;height:16px">
+        <label for="em-alert" style="font-size:.82rem">התראה ראש חודש <span style="color:#999;font-size:.75rem">(לא עובד עדיין)</span></label>
+      </div>
+      <div style="display:flex;gap:.5rem">
+        <button class="btn-primary" onclick="saveEditModal()">שמור</button>
+        <button class="btn-outline" onclick="closeEditModal()">ביטול</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- VIEWER MODAL -->
@@ -216,14 +319,49 @@ hr{border:none;border-top:1px solid var(--border);margin:.8rem 0}
       <div class="share-row">
         <span style="font-size:.75rem;color:var(--text2)">&#x1F517;</span>
         <span class="share-link" id="vwr-link"></span>
-        <button class="copy-btn" onclick="copyVwrLink()">&#x1F4CB; העתק</button>
+        <button class="copy-btn" onclick="copyVwrLink()">&#x1F4CB; העתק לינק ללימוד זה</button>
       </div>
-      <div class="toggle-bar">
-        <span class="small">פירושים:</span>
-        <button class="tog-btn on" id="tog-rashi" onclick="toggleComm('rashi')">רש״י</button>
-        <button class="tog-btn on" id="tog-metzudot" onclick="toggleComm('metzudot')">מצודות</button>
-        <button class="tog-btn" id="tog-radak" onclick="toggleComm('radak')">רד״ק</button>
-        <button class="tog-btn" id="tog-ibnezra" onclick="toggleComm('ibnezra')">אבן עזרא</button>
+      <div class="font-controls">
+        <span class="fc-label" style="margin-right:.3rem">גודל טקסט:</span>
+        <button class="font-size-btn" onclick="changeFontSize(-1)">&#x2212;</button>
+        <span id="font-size-display" style="font-size:.78rem;min-width:28px;text-align:center;color:var(--text2)">100%</span>
+        <button class="font-size-btn" onclick="changeFontSize(1)">+</button>
+      </div>
+      <div class="chapter-comm-bar" id="chapter-comm-bar" style="display:none">
+        <span class="fc-label">פירושי הפרק:</span>
+        <button class="ch-comm-btn" id="btn-raboteinu" onclick="toggleChapterComm('raboteinu')" style="display:none">הצג פירושי רבותינו נשיאנו על הפרק</button>
+        <button class="ch-comm-btn" id="btn-geula_mashiach" onclick="toggleChapterComm('geula_mashiach')" style="display:none">הצג גאו&quot;מש על הפרק</button>
+        <button class="ch-comm-btn" id="btn-chassidut_meuvad" onclick="toggleChapterComm('chassidut_meuvad')" style="display:none">הצג עניין בחסידות על הפרק</button>
+      </div>
+      <div id="chcomm-raboteinu" class="chapter-comm-block" style="display:none">
+        <div class="comm-title">פירושי רבותינו נשיאנו</div>
+        <div class="comm-body" id="chcomm-raboteinu-text"></div>
+        <div class="comm-sources" id="chcomm-raboteinu-sources"></div>
+      </div>
+      <div id="chcomm-geula_mashiach" class="chapter-comm-block" style="display:none">
+        <div class="comm-title">גאולה ומשיח</div>
+        <div class="comm-body" id="chcomm-geula_mashiach-text"></div>
+        <div class="comm-sources" id="chcomm-geula_mashiach-sources"></div>
+      </div>
+      <div id="chcomm-chassidut_meuvad" class="chapter-comm-block" style="display:none">
+        <div class="comm-title">עניין בחסידות</div>
+        <div class="comm-body" id="chcomm-chassidut_meuvad-text"></div>
+        <div class="comm-sources" id="chcomm-chassidut_meuvad-sources"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.5rem;margin-bottom:.7rem">
+        <div class="toggle-bar" style="margin-bottom:0">
+          <span class="small">פירושי פסוקים:</span>
+          <button class="tog-btn on" id="tog-rashi" onclick="toggleComm('rashi')">רש&quot;י</button>
+          <button class="tog-btn" id="tog-metzudot-david" onclick="toggleComm('metzudot-david')">מצודת דוד</button>
+          <button class="tog-btn" id="tog-metzudot-zion" onclick="toggleComm('metzudot-zion')">מצודת ציון</button>
+          <button class="tog-btn" id="tog-radak" onclick="toggleComm('radak')">רד&quot;ק</button>
+          <button class="tog-btn" id="tog-ibnezra" onclick="toggleComm('ibnezra')">אבן עזרא</button>
+        </div>
+        <button class="btn-outline" id="btn-full-chapter" onclick="toggleFullChapter()" style="font-size:.8rem;padding:5px 12px">&#x1F4DC; הצג את כל הפרק</button>
+      </div>
+      <div id="full-chapter-wrap" style="display:none;margin-bottom:1rem;background:#f9f7f0;border:1px solid var(--border);border-radius:8px;padding:.8rem">
+        <div style="font-weight:700;color:var(--blue);margin-bottom:.6rem;font-size:.9rem">כל הפרק — חלוקת פסוקים</div>
+        <div id="full-chapter-content"></div>
       </div>
       <div id="vwr-content"></div>
     </div>
@@ -479,7 +617,7 @@ async function renderSearchResult(bm,bd,by,bdGreg){
 
   var html='<div class="result-box">'+
     '<div class="main-msg">הלימוד בראש חודש <strong>'+curMonth.hmn+' '+hYearStr(curMonth.hy)+'</strong>:<br>פרק <strong>'+gem(c.pd.p)+'</strong> — פסוקים <strong>'+fmt.d+'</strong></div>'+
-    '<div class="sub-msg">גיל: '+c.age+' | חלק '+( c.idx+1)+'/'+c.numM+' | '+(c.numM===13?'שנה מעוברת':'שנה רגילה')+(nbDays!==null?' | יום הולדת הבא: '+formatCountdown(nbDays):'')+' </div>'+
+    '<div class="sub-msg">גיל: '+c.age+' | חלק '+( c.idx+1)+'/'+c.numM+' | '+(c.numM===13?'שנה מעוברת — מחזור לימוד של 13 חודשים':'שנה רגילה — מחזור לימוד של 12 חודשים')+(nbDays!==null?' | יום הולדת הבא: '+formatCountdown(nbDays):'')+' </div>'+
     alertHtml+
     '<div class="action-btns">'+
       '<button class="btn-gold" onclick="openViewer('+c.pd.p+','+(c.idx+1)+','+c.numM+','+vFrom+','+vTo+',\''+curMonth.hmn+' '+hYearStr(curMonth.hy)+'\',\''+fmt.d+'\')">&#x1F4D6; קרא לימוד נוכחי</button>'+
@@ -492,6 +630,7 @@ async function renderSearchResult(bm,bd,by,bdGreg){
 
   // store for table
   window._lastCalc={c,bm,bd,by};
+  window._lastCalcC=c;
 }
 
 function toggleTable(){
@@ -505,21 +644,42 @@ function toggleTable(){
 }
 
 async function buildTable(wrap,c){
-  var rows='';
+  var table=document.createElement('table');
+  table.className='study-table';
+  var thead=document.createElement('tr');
+  thead.innerHTML='<th>\u05d7\u05dc\u05e7</th><th>\u05d7\u05d5\u05d3\u05e9</th><th>\u05e8\u05d0\u05e9 \u05d7\u05d5\u05d3\u05e9</th><th>\u05e4\u05e1\u05d5\u05e7\u05d9\u05dd</th><th></th>';
+  table.appendChild(thead);
   for(var ti=0;ti<c.months.length;ti++){
     var sm=c.months[ti],fmt=fmtSegs(c.ranges[ti]);
     var g=await h2g(sm.hy,sm.hm,1);
     var gstr=g&&g.gy?new Date(g.gy,g.gm-1,g.gd).toLocaleDateString('he-IL'):'--';
     var segs=c.ranges[ti];var vf=segs[0][0],vt=segs[segs.length-1][1];
     var isCur=(ti===c.idx);
-    rows+='<tr'+(isCur?' class="cur"':'')+'>'+
-      '<td>'+(ti+1)+'</td><td>'+sm.hmn+' '+hYearStr(sm.hy)+'</td>'+
+    var tr=document.createElement('tr');
+    if(isCur)tr.className='cur';
+    var monthLabel=sm.hmn+' '+hYearStr(sm.hy);
+    tr.innerHTML='<td>'+(ti+1)+'</td><td>'+monthLabel+'</td>'+
       '<td style="direction:ltr;text-align:left">'+gstr+'</td>'+
       '<td>'+fmt.d+' <small style="color:#999">('+fmt.n+')</small></td>'+
-      '<td><button class="read-btn" onclick="openViewer('+c.pd.p+','+(ti+1)+','+c.numM+','+vf+','+vt+',\''+sm.hmn+' '+hYearStr(sm.hy)+'\',\''+fmt.d+'\')">קרא</button></td>'+
-      '</tr>';
+      '<td>'+
+        '<button class="read-btn" data-p="'+c.pd.p+'" data-part="'+(ti+1)+'" data-total="'+c.numM+'" data-vf="'+vf+'" data-vt="'+vt+'" data-month="'+monthLabel+'" data-verses="'+fmt.d+'">\u05e7\u05e8\u05d0</button> '+
+        '<button class="read-btn" style="background:#f0f0f0;color:#444;border:1px solid #ccc;font-size:.7rem" data-copyp="'+c.pd.p+'" data-copypart="'+(ti+1)+'" data-copytotal="'+c.numM+'" data-copyvf="'+vf+'" data-copyvt="'+vt+'">\u05d4\u05e2\u05ea\u05e7 \u05dc\u05d9\u05e0\u05e7 \u05dc\u05dc\u05d9\u05de\u05d5\u05d3 \u05d6\u05d4</button>'+
+      '</td>';
+    (function(row,cp,cpart,ctotal,cvf,cvt,cmonth,cverses){
+      var readBtn=row.querySelector('[data-p]');
+      var copyBtn=row.querySelector('[data-copyp]');
+      if(readBtn)readBtn.addEventListener('click',function(){openViewer(cp,cpart,ctotal,cvf,cvt,cmonth,cverses);_currentViewerCalc=c||null;});
+      if(copyBtn)copyBtn.addEventListener('click',function(){copyTableLink(cp,cpart,ctotal,cvf,cvt);});
+    })(tr,c.pd.p,ti+1,c.numM,vf,vt,monthLabel,fmt.d);
+    table.appendChild(tr);
   }
-  wrap.innerHTML='<table class="study-table"><tr><th>חלק</th><th>חודש</th><th>ראש חודש</th><th>פסוקים</th><th></th></tr>'+rows+'</table>';
+  wrap.innerHTML='';
+  wrap.appendChild(table);
+}
+
+function copyTableLink(p,part,total,vf,vt){
+  var url=window.location.href.split('#')[0]+'#'+p+'/'+part+'-'+total+'/'+vf+'-'+vt;
+  navigator.clipboard.writeText(url).then(function(){alert('הלינק הועתק!');});
 }
 
 // ============================================================
@@ -563,14 +723,69 @@ async function saveChapter(){
 
 function addRabbi(){
   var chs=getChapters();
-  if(chs.find(function(c){return c.name==='\u05d4\u05e8\u05d1\u05d9';})){alert('הרבי כבר קיים ברשימה');return;}
-  // 18/4/1902 -> hebrew
+  if(chs.find(function(c){return c.name==='הרבי';})){alert('הרבי כבר קיים ברשימה');return;}
   g2h(new Date('1902-04-18')).then(function(hb){
     var bm=hb.hm,bd=hb.hd,by=hb.hy;
     if(bm==='Shvat')bm="Sh'vat";
-    chs.push({id:Date.now(),name:'\u05d4\u05e8\u05d1\u05d9',bm,bd,by,alert:false});
+    chs.push({id:Date.now(),name:'הרבי',bm,bd,by,alert:false});
     saveChapters(chs);renderPersonal();
   });
+}
+
+var _editId=null;
+function editChapter(id){
+  var chs=getChapters();
+  var ch=chs.find(function(c){return c.id===id;});
+  if(!ch)return;
+  _editId=id;
+  document.getElementById('em-name').value=ch.name;
+  document.getElementById('em-alert').checked=!!ch.alert;
+  // set date fields - we have heb date stored
+  document.getElementById('em-dtype').value='heb';
+  toggleEditDateType();
+  document.getElementById('em-hd').value=ch.bd;
+  // set month select
+  var hms=document.getElementById('em-hm');
+  for(var i=0;i<hms.options.length;i++){if(hms.options[i].value===ch.bm){hms.selectedIndex=i;break;}}
+  document.getElementById('em-hy').value=ch.by;
+  document.getElementById('edit-overlay').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+function closeEditModal(){
+  document.getElementById('edit-overlay').style.display='none';
+  document.body.style.overflow='';
+  _editId=null;
+}
+function toggleEditDateType(){
+  var v=document.getElementById('em-dtype').value;
+  document.getElementById('em-greg-row').style.display=v==='greg'?'block':'none';
+  document.getElementById('em-heb-row').style.display=v==='heb'?'flex':'none';
+}
+async function saveEditModal(){
+  if(!_editId)return;
+  var chs=getChapters();
+  var ch=chs.find(function(c){return c.id===_editId;});
+  if(!ch)return;
+  var name=document.getElementById('em-name').value.trim();
+  if(!name){alert('הזן שם');return;}
+  ch.name=name;
+  ch.alert=document.getElementById('em-alert').checked;
+  var dtype=document.getElementById('em-dtype').value;
+  if(dtype==='greg'){
+    var gv=document.getElementById('em-greg').value;
+    if(gv){
+      var hb=await g2h(new Date(gv));
+      if(hb&&!hb.error){ch.bm=hb.hm;ch.bd=hb.hd;ch.by=hb.hy;}
+    }
+  } else {
+    ch.bd=parseInt(document.getElementById('em-hd').value);
+    ch.bm=document.getElementById('em-hm').value;
+    ch.by=parseInt(document.getElementById('em-hy').value);
+  }
+  if(ch.bm==='Shvat')ch.bm="Sh'vat";
+  saveChapters(chs);
+  closeEditModal();
+  renderPersonal();
 }
 
 function deleteChapter(id){
@@ -582,8 +797,8 @@ function deleteChapter(id){
 async function renderPersonal(){
   var list=document.getElementById('chapters-list');
   var chs=getChapters();
-  if(chs.length===0){list.innerHTML='<div class="small" style="padding:1rem;text-align:center;color:#999">אין פרקים שמורים. לחץ על "הוסף פרק" כדי להתחיל.</div>';return;}
-  list.innerHTML='<div class="loading">&#x23F3; מחשב פרקים...</div>';
+  if(chs.length===0){list.innerHTML='<div class="small" style="padding:1rem;text-align:center;color:#999">' + '\u05d0\u05d9\u05df \u05e4\u05e8\u05e7\u05d9\u05dd \u05e9\u05de\u05d5\u05e8\u05d9\u05dd. \u05dc\u05d7\u05e5 \u05e2\u05dc "\u05d4\u05d5\u05e1\u05e3 \u05e4\u05e8\u05e7" \u05db\u05d3\u05d9 \u05dc\u05d4\u05ea\u05d7\u05d9\u05dc.' + '</div>';return;}
+  list.innerHTML='<div class="loading">&#x23F3; \u05de\u05d7\u05e9\u05d1 \u05e4\u05e8\u05e7\u05d9\u05dd...</div>';
   var today=new Date();today.setHours(0,0,0,0);
   var html='';
   for(var i=0;i<chs.length;i++){
@@ -594,26 +809,55 @@ async function renderPersonal(){
     var vFrom=c.ranges[c.idx][0][0],vTo=c.ranges[c.idx][c.ranges[c.idx].length-1][1];
     var nbDays=daysToNextBD(c.nbGreg,today);
     var id=ch.id;
-    html+='<div class="chapter-card" draggable="true" data-id="'+id+'" ondragstart="dragStart(event,'+id+')" ondragover="dragOver(event)" ondrop="dragDrop(event,'+id+')" ondragleave="dragLeave(event)">'+
+    var nbHebStr='';
+    if(c.nbGreg){
+      try{
+        var nbH=await g2h(c.nbGreg);
+        if(nbH&&nbH.hd)nbHebStr=gem(nbH.hd)+' '+hmn(nbH.hm)+' '+hYearStr(nbH.hy);
+      }catch(e){}
+    }
+    var bdLine='';
+    if(nbDays!==null){
+      bdLine='\u05d9\u05d5\u05dd \u05d4\u05d5\u05dc\u05d3\u05ea \u05d4\u05d1\u05d0: '+formatCountdown(nbDays);
+      if(nbHebStr)bdLine+=' \u2014 '+nbHebStr;
+    }
+    var monthLabel=curM.hmn+' '+hYearStr(curM.hy);
+    var btnOpen='openViewer('+c.pd.p+','+(c.idx+1)+','+c.numM+','+vFrom+','+vTo+',encodeURI("'+curM.hmn+'"),"'+hYearStr(curM.hy)+'")';
+    // Build card using data attributes to avoid quote hell
+    var card=document.createElement('div');
+    card.className='chapter-card';
+    card.draggable=true;
+    card.dataset.id=id;
+    card.innerHTML=
       '<span class="drag-handle">&#x2630;</span>'+
-      '<div class="ch-name">'+ch.name+(ch.alert?' <span class="tag">התראה</span>':'')+'</div>'+
+      '<div class="ch-name">'+ch.name+(ch.alert?' <span class="tag">\u05d4\u05ea\u05e8\u05d0\u05d4</span>':'')+' </div>'+
       '<div class="ch-meta">'+
-        'פרק '+gem(c.pd.p)+' (גיל '+c.age+') &nbsp;|&nbsp; '+
-        'ראש חודש <strong>'+curM.hmn+'</strong> — פסוקים '+fmt.d+'<br>'+
-        (nbDays!==null?'יום הולדת הבא: '+formatCountdown(nbDays):'')+'&nbsp;|&nbsp; '+c.numM+' חודשים'+
+        '\u05e4\u05e8\u05e7 '+gem(c.pd.p)+' (\u05d2\u05d9\u05dc '+c.age+') &nbsp;|&nbsp; '+
+        '\u05e8\u05d0\u05e9 \u05d7\u05d5\u05d3\u05e9 <strong>'+curM.hmn+'</strong> \u2014 \u05e4\u05e1\u05d5\u05e7\u05d9\u05dd '+fmt.d+'<br>'+
+        (bdLine?bdLine+' &nbsp;|&nbsp; ':'')+'מחזור לימוד של '+c.numM+' חודשים'+
       '</div>'+
-      '<div class="ch-actions">'+
-        '<button onclick="openViewer('+c.pd.p+','+(c.idx+1)+','+c.numM+','+vFrom+','+vTo+',\''+curM.hmn+' '+hYearStr(curM.hy)+'\',\''+fmt.d+'\')">&#x1F4D6; לימוד נוכחי</button>'+
-        '<button onclick="openPersonalTable('+id+')">&#x1F4C5; טבלה מלאה</button>'+
-        '<button onclick="copyChLink('+id+','+c.pd.p+','+(c.idx+1)+','+c.numM+','+vFrom+','+vTo+')">&#x1F517; העתק לינק</button>'+
-        '<button onclick="editChapter('+id+')" style="color:#666">&#x270F;&#xFE0F; ערוך</button>'+
-        '<button onclick="deleteChapter('+id+')" style="color:#c00">&#x2715; מחק</button>'+
+      '<div class="ch-actions-primary">'+
+        '<button class="btn-primary-action" data-chapter="'+c.pd.p+'" data-part="'+(c.idx+1)+'" data-total="'+c.numM+'" data-vf="'+vFrom+'" data-vt="'+vTo+'" data-month="'+monthLabel+'" data-verses="'+fmt.d+'">&#x1F4D6; \u05d4\u05e6\u05d2 \u05dc\u05d9\u05de\u05d5\u05d3 \u05e0\u05d5\u05db\u05d7\u05d9</button>'+
+        '<button class="btn-secondary-action" data-ptable="'+id+'">&#x1F4C5; \u05d4\u05e6\u05d2 \u05d8\u05d1\u05dc\u05d4 \u05de\u05dc\u05d0\u05d4</button>'+
       '</div>'+
-      '<div class="collapse-content" id="ptable-'+id+'"></div>'+
-    '</div>';
+      '<div class="ch-actions-secondary">'+
+        '<button data-edit="'+id+'">&#x270F;&#xFE0F; \u05e2\u05e8\u05d5\u05da</button>'+
+        '<button class="del-btn" data-delete="'+id+'">&#x2715; \u05de\u05d7\u05e7</button>'+
+      '</div>'+
+      '<div class="collapse-content" id="ptable-'+id+'"></div>';
+    // Wire events
+    (function(cc,cid,cp,cpart,ctotal,cvf,cvt,cmonth,cverses){
+      card.querySelector('[data-chapter]').addEventListener('click',function(){openViewer(cp,cpart,ctotal,cvf,cvt,cmonth,cverses);_currentViewerCalc=cc;});
+      card.querySelector('[data-ptable]').addEventListener('click',function(){openPersonalTable(cid);});
+      card.querySelector('[data-edit]').addEventListener('click',function(){editChapter(cid);});
+      card.querySelector('[data-delete]').addEventListener('click',function(){deleteChapter(cid);});
+      card.addEventListener('dragstart',function(e){dragStart(e,cid);});
+      card.addEventListener('dragover',dragOver);
+      card.addEventListener('drop',function(e){dragDrop(e,cid);});
+      card.addEventListener('dragleave',dragLeave);
+    })(c,id,c.pd.p,c.idx+1,c.numM,vFrom,vTo,monthLabel,fmt.d);
+    list.appendChild(card);
   }
-  list.innerHTML=html;
-  // store calc results for table
   window._chCalc=window._chCalc||{};
   for(var j=0;j<chs.length;j++){
     var ch2=chs[j];
@@ -630,11 +874,6 @@ async function openPersonalTable(id){
   var c=window._chCalc[id];
   if(!c)return;
   buildTable(wrap,c);
-}
-
-function copyChLink(id,p,part,total,vf,vt){
-  var url=window.location.href.split('#')[0]+'#'+p+'/'+part+'-'+total+'/'+vf+'-'+vt;
-  navigator.clipboard.writeText(url).then(function(){alert('הלינק הועתק!');});
 }
 
 // Drag & Drop
@@ -655,74 +894,305 @@ function dragDrop(e,targetId){
   renderPersonal();
 }
 
+
+
 // ============================================================
 // VIEWER
 // ============================================================
-var activeComms={rashi:true,metzudot:true,radak:false,ibnezra:false};
-var COMM_MAP={'Rashi':'rashi','Radak':'radak','Metzudat David':'metzudot','Metzudat Zion':'metzudot','Ibn Ezra':'ibnezra'};
-var COMM_LBL={rashi:'רש״י',metzudot:'מצודות',radak:'רד״ק',ibnezra:'אבן עזרא'};
+var activeComms={rashi:true,'metzudot-david':false,'metzudot-zion':false,radak:false,ibnezra:false};
+var COMM_MAP={'Rashi':'rashi','Radak':'radak','Metzudat David':'metzudot-david','Metzudat Zion':'metzudot-zion','Ibn Ezra':'ibnezra'};
+var COMM_LBL={rashi:'רש״י','metzudot-david':'מצודת דוד','metzudot-zion':'מצודת ציון',radak:'רד״ק',ibnezra:'אבן עזרא'};
 var sefC={};
+var viewerFontSize=100;
+var activeChapterComms={};
+var chapterCommCache={};
 
 function toggleComm(key){
   activeComms[key]=!activeComms[key];
-  document.getElementById('tog-'+key).classList.toggle('on',activeComms[key]);
+  var togId='tog-'+key;
+  var togEl=document.getElementById(togId);
+  if(togEl)togEl.classList.toggle('on',activeComms[key]);
+  var cssKey=key.replace('-','\\-');
   document.querySelectorAll('.comm-item.'+key).forEach(function(el){el.style.display=activeComms[key]?'block':'none';});
 }
 
-function openViewer(p,part,total,vf,vt,monthLabel,versesLabel){
+function getViewerPanel(){return document.getElementById('viewer-panel');}
+function changeFontSize(delta){
+  viewerFontSize=Math.max(70,Math.min(180,viewerFontSize+delta*10));
+  var p=getViewerPanel();
+  if(p)p.style.fontSize=Math.round(16*viewerFontSize/100)+'px';
+  document.getElementById('font-size-display').textContent=viewerFontSize+'%';
+}
+function changeFontFamily(val){
+  var p=getViewerPanel();
+  if(p)p.style.fontFamily=val;
+}
+
+function toggleChapterComm(key){
+  var btn=document.getElementById('btn-'+key);
+  var block=document.getElementById('chcomm-'+key);
+  if(!block)return;
+  var isOpen=block.style.display==='block';
+  block.style.display=isOpen?'none':'block';
+  if(btn)btn.classList.toggle('on',!isOpen);
+}
+
+// Single fetch for all chapters - loaded once and cached globally
+var _allRaboteinData=null;
+var _allRaboteinLoading=null;
+
+async function getAllRabotein(){
+  if(_allRaboteinData)return _allRaboteinData;
+  if(_allRaboteinLoading)return _allRaboteinLoading;
+  _allRaboteinLoading=fetch('https://shnotik770-netizen.github.io/tehilim/psalms/all-rabotein.json')
+    .then(function(r){return r.ok?r.json():null;})
+    .then(function(d){_allRaboteinData=d||{};_allRaboteinLoading=null;return _allRaboteinData;})
+    .catch(function(){_allRaboteinData={};_allRaboteinLoading=null;return {};});
+  return _allRaboteinLoading;
+}
+
+async function loadChapterCommentaries(chapter){
+  // reset buttons and blocks
+  ['raboteinu','geula_mashiach','chassidut_meuvad'].forEach(function(k){
+    var btn=document.getElementById('btn-'+k);
+    var block=document.getElementById('chcomm-'+k);
+    if(btn)btn.style.display='none';
+    if(block)block.style.display='none';
+  });
+  document.getElementById('chapter-comm-bar').style.display='none';
+
+  var allData=await getAllRabotein();
+  // chapter key is string
+  var chapterEntry=allData[String(chapter)];
+  if(!chapterEntry)return;
+  // JSON structure: { "commentaries": { "raboteinu": {...}, ... } }
+  var chapterData=chapterEntry.commentaries||chapterEntry;
+
+  var KEY_MAP={
+    'raboteinu':'raboteinu',
+    'chassidut_meuvad':'chassidut_meuvad',
+    'geula_mashiach':'geula_mashiach'
+  };
+  var anyVisible=false;
+  Object.keys(KEY_MAP).forEach(function(jsonKey){
+    var uiKey=KEY_MAP[jsonKey];
+    var data=chapterData[jsonKey];
+    var text=data&&typeof data==='object'?data.text:data;
+    var sources=data&&typeof data==='object'?data.sources||'':'';
+    if(!text||!text.trim())return;
+    var btn=document.getElementById('btn-'+uiKey);
+    var textEl=document.getElementById('chcomm-'+uiKey+'-text');
+    var srcEl=document.getElementById('chcomm-'+uiKey+'-sources');
+    if(btn)btn.style.display='inline-block';
+    if(textEl)textEl.textContent=text;
+    if(srcEl)srcEl.textContent=sources;
+    anyVisible=true;
+  });
+  if(anyVisible)document.getElementById('chapter-comm-bar').style.display='flex';
+}
+
+function openViewer(p,part,total,vf,vt,monthLabel,versesLabel,rawSegs){
   var hash='#'+p+'/'+part+'-'+total+'/'+vf+'-'+vt;
   var url=window.location.href.split('#')[0]+hash;
-  document.getElementById('vwr-title').textContent='\u05ea\u05d4\u05dc\u05d9\u05dd \u05e4\u05e8\u05e7 '+gem(p)+' \u2014 \u05e4\u05e1\u05d5\u05e7\u05d9\u05dd '+versesLabel+' \u2014 '+monthLabel;
+  document.getElementById('vwr-title').textContent='תהלים פרק '+gem(p)+' — פסוקים '+versesLabel+' — '+monthLabel;
   document.getElementById('vwr-link').textContent=url;
   window._vwrUrl=url;
+  // Build segments for cross-chapter support
+  if(rawSegs&&rawSegs.length){
+    window._vwrSegs=rawSegs;
+  } else {
+    // Simple single range - check if it wraps around chapter
+    var totalV=PSALM_DATA[p-1].v;
+    if(vf<=vt){
+      window._vwrSegs=[{ch:p,vf:vf,vt:vt}];
+    } else {
+      // wraps: vf to end, then 1 to vt
+      window._vwrSegs=[{ch:p,vf:vf,vt:totalV},{ch:p,vf:1,vt:vt}];
+    }
+  }
+  viewerFontSize=100;
+  document.getElementById('font-size-display').textContent='100%';
+  var vp=document.getElementById('viewer-panel');
+  if(vp){vp.style.fontSize='';vp.style.fontFamily="'Keter YG','Frank Ruhl Libre',serif";}
   document.getElementById('viewer-overlay').style.display='block';
   document.body.style.overflow='hidden';
+  _currentViewerChapter=p;
+  _currentViewerCalc=null; // will be set by caller if available
+  _fullChapterOpen=false;
+  var fcWrap=document.getElementById('full-chapter-wrap');
+  if(fcWrap)fcWrap.style.display='none';
+  var fcBtn=document.getElementById('btn-full-chapter');
+  if(fcBtn)fcBtn.classList.remove('active');
   loadViewerContent(p,vf,vt);
+  loadChapterCommentaries(p);
 }
-function closeViewer(){document.getElementById('viewer-overlay').style.display='none';document.body.style.overflow='';}
+function closeViewer(){document.getElementById('viewer-overlay').style.display='none';document.body.style.overflow='';window._vwrSegs=null;}
+
+var _fullChapterOpen=false;
+var _currentViewerChapter=null;
+var _currentViewerCalc=null;
+
+function toggleFullChapter(){
+  var wrap=document.getElementById('full-chapter-wrap');
+  var btn=document.getElementById('btn-full-chapter');
+  _fullChapterOpen=!_fullChapterOpen;
+  wrap.style.display=_fullChapterOpen?'block':'none';
+  btn.classList.toggle('active',_fullChapterOpen);
+  if(_fullChapterOpen&&_currentViewerChapter){
+    loadFullChapterContent(_currentViewerChapter,_currentViewerCalc||window._lastCalcC||null);
+  }
+}
+
+async function loadFullChapterContent(chapter,calc){
+  var wrap=document.getElementById('full-chapter-content');
+  wrap.innerHTML='<div class="viewer-loading">&#x23F3; טוען פרק מלא...</div>';
+  var pd=PSALM_DATA[chapter-1];
+  var totalV=pd.v;
+  try{
+    // Fetch text
+    var ref='Psalms '+chapter+':1-'+totalV;
+    var textUrl='https://www.sefaria.org/api/v3/texts/'+encodeURIComponent(ref)+'?lang=he&vhe='+encodeURIComponent('Tanach with Nikkud');
+    // Fetch all commentaries for chapter
+    var linkUrl='https://www.sefaria.org/api/links/Psalms.'+chapter+'.1-'+totalV+'?with_text=1&lang=he';
+    var [tr,lr]=await Promise.all([fetch(textUrl),fetch(linkUrl)]);
+    var td=await tr.json(), ld=await lr.json();
+
+    // Parse verses
+    var heArr=[];
+    if(td.versions&&td.versions[0]){var tv=td.versions[0].text;heArr=Array.isArray(tv)?tv:[tv];}
+    if(!heArr.length&&td.versions&&td.versions.length>1){var tv2=td.versions[1].text;heArr=Array.isArray(tv2)?tv2:[tv2];}
+
+    // Parse commentaries per verse
+    var commByVerse={};
+    for(var vi=1;vi<=totalV;vi++)commByVerse[vi]={rashi:[],'metzudot-david':[],'metzudot-zion':[],radak:[],ibnezra:[]};
+    if(Array.isArray(ld)){ld.forEach(function(lnk){
+      var cat=lnk.collectiveTitle&&lnk.collectiveTitle.en,key=COMM_MAP[cat];
+      if(!key||!lnk.he)return;
+      var am=lnk.anchorRef&&lnk.anchorRef.match(/:(\d+)/),vn=am?parseInt(am[1]):1;
+      if(commByVerse[vn]&&commByVerse[vn][key]!==undefined)commByVerse[vn][key].push(lnk.he);
+    });}
+
+    // Build HTML — one block per verse with all active commentaries
+    var html='';
+    heArr.forEach(function(txt,i){
+      var vnum=i+1;
+      var comm=commByVerse[vnum]||{};
+      html+='<div class="pasuk-block">';
+      html+='<div class="pasuk-num">פסוק '+gem(vnum)+'</div>';
+      html+='<div class="pasuk-text">'+processVerseText(txt)+'</div>';
+      html+='<div>';
+      ['rashi','metzudot-david','metzudot-zion','radak','ibnezra'].forEach(function(key){
+        var txts=comm[key]||[];if(!txts.length)return;
+        if(!activeComms[key])return; // respect toggle state
+        html+='<div class="comm-item '+key+'">'+
+          '<div class="comm-label '+key+'">'+COMM_LBL[key]+'</div>'+
+          txts.map(function(t){return'<div class="comm-text">'+stripH(t)+'</div>';}).join('')+
+          '</div>';
+      });
+      html+='</div></div>';
+    });
+
+    // Distribution table
+    var tableHtml='';
+    if(calc){
+      tableHtml+='<hr style="margin:1rem 0">';
+      tableHtml+='<div style="font-weight:700;color:var(--blue);margin-bottom:.5rem;font-size:.88rem">חלוקת פסוקים לפי חודשים:</div>';
+      tableHtml+='<table class="study-table"><tr><th>חלק</th><th>חודש</th><th>פסוקים</th></tr>';
+      for(var ti=0;ti<calc.months.length;ti++){
+        var sm=calc.months[ti];
+        var fmt=fmtSegs(calc.ranges[ti]);
+        var isCur=(ti===calc.idx);
+        tableHtml+='<tr'+(isCur?' class="cur"':'')+'>'+
+          '<td>'+(ti+1)+'</td>'+
+          '<td>'+sm.hmn+' '+hYearStr(sm.hy)+'</td>'+
+          '<td>'+fmt.d+'</td></tr>';
+      }
+      tableHtml+='</table>';
+    }
+
+    wrap.innerHTML=html+tableHtml||'<div class="err">לא נמצאו פסוקים</div>';
+  }catch(e){
+    wrap.innerHTML='<div class="err">שגיאה בטעינה: '+e.message+'</div>';
+  }
+}
 function copyVwrLink(){navigator.clipboard.writeText(window._vwrUrl||'').then(function(){alert('\u05d4\u05dc\u05d9\u05e0\u05e7 \u05d4\u05d5\u05e2\u05ea\u05e7!');});}
 
+
+function openViewerWithCalc(p,part,total,vf,vt,monthLabel,versesLabel,calc){
+  openViewer(p,part,total,vf,vt,monthLabel,versesLabel);
+  _currentViewerCalc=calc||null;
+}
 function stripH(s){return s?s.replace(/<[^>]+>/g,''):''}
+function stripTeamim(s){
+  if(!s)return s;
+  // Remove Hebrew cantillation marks (teamim) U+0591-U+05AF, U+05C4, U+05C5
+  // Keep nikkud (U+05B0-U+05BC, U+05C1-U+05C3, U+05C7) and letters
+  return s.replace(/[֑-ׅ֯ׄ]/g,'');
+}
+function processVerseText(s){return stripTeamim(stripH(s));}
 
 async function loadViewerContent(chapter,vf,vt){
-  var content=document.getElementById('vwr-content');
-  content.innerHTML='<div class="viewer-loading">&#x23F3; טוען מספריא...</div>';
+  var el=document.getElementById('vwr-content');
+  el.innerHTML='<div class="viewer-loading">&#x23F3; טוען מספריא...</div>';
   var cacheKey=chapter+':'+vf+'-'+vt;
   var data=sefC[cacheKey];
   if(!data){
     try{
-      var ref='Psalms '+chapter+':'+(vf===vt?vf:vf+'-'+vt);
-      var textUrl='https://www.sefaria.org/api/v3/texts/'+encodeURIComponent(ref)+'?lang=he';
-      var linkUrl='https://www.sefaria.org/api/links/Psalms.'+chapter+'.'+vf+(vf===vt?'':'-'+vt)+'?with_text=1&lang=he';
-      var [tr,lr]=await Promise.all([fetch(textUrl),fetch(linkUrl)]);
-      var td=await tr.json(),ld=await lr.json();
+      // Build segments list from PSALM_DATA for cross-chapter support
+      var totalV=PSALM_DATA[chapter-1].v;
+      // collect all (chap, fromV, toV) segments by expanding segs
+      // segs is passed via openViewer but we only have vf,vt here
+      // We use the stored _vwrSegs set by openViewer
+      var segments=window._vwrSegs||[{ch:chapter,vf:vf,vt:vt}];
       data={verses:[],comm:{}};
-      var heArr=[];
-      if(td.versions&&td.versions[0]){var v=td.versions[0].text;heArr=Array.isArray(v)?v:[v];}
-      for(var i=0;i<heArr.length;i++){var vnum=vf+i;data.verses.push({num:vnum,text:heArr[i]||''});data.comm[vnum]={rashi:[],metzudot:[],radak:[],ibnezra:[]};}
-      if(Array.isArray(ld)){ld.forEach(function(lnk){
-        var cat=lnk.collectiveTitle&&lnk.collectiveTitle.en,key=COMM_MAP[cat];
-        if(!key||!lnk.he)return;
-        var am=lnk.anchorRef&&lnk.anchorRef.match(/:(\d+)/),vn=am?parseInt(am[1]):vf;
-        if(data.comm[vn]&&data.comm[vn][key]!==undefined)data.comm[vn][key].push(lnk.he);
-      });}
+      // fetch each segment separately
+      for(var si=0;si<segments.length;si++){
+        var seg=segments[si];
+        var segRef='Psalms '+seg.ch+':'+(seg.vf===seg.vt?seg.vf:seg.vf+'-'+seg.vt);
+        var segUrl='https://www.sefaria.org/api/v3/texts/'+encodeURIComponent(segRef)+'?lang=he&vhe='+encodeURIComponent('Tanach with Nikkud');
+        var segLinkUrl='https://www.sefaria.org/api/links/Psalms.'+seg.ch+'.'+seg.vf+(seg.vf===seg.vt?'':'-'+seg.vt)+'?with_text=1&lang=he';
+        var [str,slr]=await Promise.all([fetch(segUrl),fetch(segLinkUrl)]);
+        if(!str.ok){continue;}
+        var std=await str.json(),sld=await slr.json();
+        var heArr=[];
+        if(std.versions&&std.versions[0]){var sv=std.versions[0].text;heArr=Array.isArray(sv)?sv:[sv];}
+        // fallback: if no versions with vhe, try without
+        if(!heArr.length&&std.versions&&std.versions.length){
+          var sv2=std.versions[0].text;heArr=Array.isArray(sv2)?sv2:[sv2];
+        }
+        for(var vi=0;vi<heArr.length;vi++){
+          var vnum=seg.vf+vi;
+          var label='פסוק '+gem(vnum)+(segments.length>1?' ('+gem(seg.ch)+')':'');
+          data.verses.push({num:vnum,text:heArr[vi]||'',label:label});
+          data.comm[seg.ch+':'+vnum]={rashi:[],'metzudot-david':[],'metzudot-zion':[],radak:[],ibnezra:[]};
+        }
+        if(Array.isArray(sld)){sld.forEach(function(lnk){
+          var cat=lnk.collectiveTitle&&lnk.collectiveTitle.en,key=COMM_MAP[cat];
+          if(!key||!lnk.he)return;
+          var am=lnk.anchorRef&&lnk.anchorRef.match(/:(\d+)/),vn2=am?parseInt(am[1]):seg.vf;
+          var ck=seg.ch+':'+vn2;
+          if(data.comm[ck]&&data.comm[ck][key]!==undefined)data.comm[ck][key].push(lnk.he);
+        });}
+      }
       sefC[cacheKey]=data;
-    }catch(e){content.innerHTML='<div class="err">שגיאה בטעינה מספריא</div>';return;}
+    }catch(e){el.innerHTML='<div class="err">שגיאה בטעינה מספריא</div>';return;}
   }
   var html='';
   data.verses.forEach(function(v){
-    var comm=data.comm[v.num]||{rashi:[],metzudot:[],radak:[],ibnezra:[]};
-    html+='<div class="pasuk-block"><div class="pasuk-num">פסוק '+gem(v.num)+'</div><div class="pasuk-text">'+stripH(v.text)+'</div><div>';
-    ['rashi','metzudot','radak','ibnezra'].forEach(function(key){
+    var commKey=v.commKey||(v.ch?v.ch+':'+v.num:Object.keys(data.comm).find(function(k){return k.endsWith(':'+v.num);})||v.num);
+    var comm=data.comm[commKey]||data.comm[v.num]||{rashi:[],'metzudot-david':[],'metzudot-zion':[],radak:[],ibnezra:[]};
+    html+='<div class="pasuk-block"><div class="pasuk-num">'+(v.label||'פסוק '+gem(v.num))+'</div><div class="pasuk-text">'+processVerseText(v.text)+'</div><div>';
+    ['rashi','metzudot-david','metzudot-zion','radak','ibnezra'].forEach(function(key){
       var txts=comm[key]||[];if(!txts.length)return;
-      html+='<div class="comm-item '+key+'" style="display:'+(activeComms[key]?'block':'none')+'">'+
-        '<div class="comm-label '+key+'">'+COMM_LBL[key]+'</div>'+
+      var cssClass=key;
+      html+='<div class="comm-item '+cssClass+'" style="display:'+(activeComms[key]?'block':'none')+'">'+
+        '<div class="comm-label '+cssClass+'">'+COMM_LBL[key]+'</div>'+
         txts.map(function(t){return'<div class="comm-text">'+stripH(t)+'</div>';}).join('')+
         '</div>';
     });
     html+='</div></div>';
   });
-  content.innerHTML=html||'<div class="err">לא נמצאו פסוקים</div>';
+  el.innerHTML=html||'<div class="err">לא נמצאו פסוקים</div>';
 }
 
 // ============================================================
@@ -749,6 +1219,13 @@ async function loadFromHash(){
 }
 
 window.onload=async function(){
+  // Hebrew year letters live preview
+  var hy=document.getElementById('heb-year');
+  if(hy){hy.addEventListener('input',function(){
+    var n=parseInt(this.value);
+    var el=document.getElementById('heb-year-letters');
+    if(el)el.textContent=n>=5000&&n<=6000?hYearStr(n):'';
+  });}
   await loadFromHash();
   renderPersonal();
 };
