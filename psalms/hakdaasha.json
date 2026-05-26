@@ -1,1 +1,20 @@
-
+{
+  "contact_info": {
+    "email": "shy770@gmail.com",
+    "phone": ""
+  },
+  "dedications": [
+    {
+      "category": "leiluy",
+      "main_title": "לזיכרון עולם",
+      "subtitle": "האתר ולימוד התהילים מוקדשים בהוקרה",
+      "type_title": "לעילוי נשמת החסיד ישר הדרך",
+      "main_name": "ר' חיים ז\"ל",
+      "content_lines": [
+        "בן ר' יצחק אייזיק ינקוביץ ז\"ל",
+        "ט' אדר תשפ\"ו"
+      ],
+      "footer_text": "ת.נ.צ.ב.ה."
+    }
+  ]
+}
