@@ -125,9 +125,31 @@ nav .nav-links button.active,nav .nav-links button:hover{background:var(--gold);
 .ch-inline-actions button{padding:2px 8px;font-size:.7rem;border-radius:4px;cursor:pointer;font-family:var(--ui-font);border:1px solid var(--border);background:transparent;color:var(--text2);transition:all .15s}
 .ch-inline-actions button:hover{background:var(--cream);border-color:var(--gold2);color:var(--gold2)}
 .ch-inline-actions button.del-btn:hover{background:#fff0f0;color:#c00;border-color:#fcc}
-.chapter-card .ch-badge{display:inline-block;background:var(--night2);color:var(--gold);border-radius:20px;padding:3px 12px;font-size:.78rem;font-family:'Frank Ruhl Libre',serif;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+.chapter-card .ch-badge{display:inline-block;background:var(--night2);color:var(--gold);border-radius:20px;padding:5px 14px;font-size:.82rem;font-family:'Frank Ruhl Libre',serif;font-weight:700;letter-spacing:.02em;white-space:nowrap;cursor:pointer;transition:all .2s;border:none;text-align:right}
+.chapter-card .ch-badge:hover{background:var(--gold);color:var(--night);transform:translateY(-1px)}
 .chapter-card .ch-meta{font-size:.78rem;color:var(--text2);line-height:1.5}
 .ch-right{display:flex;flex-direction:column;align-items:flex-start;gap:.35rem;flex-shrink:0}
+/* mobile: stack card vertically */
+@media(max-width:540px){
+  .chapter-card{flex-direction:column;align-items:stretch;gap:.5rem}
+  .ch-right{flex-direction:row;flex-wrap:wrap;width:100%}
+  .ch-right .btn-primary-action,.ch-right .btn-secondary-action{flex:1;text-align:center}
+  .ch-inline-actions{margin-right:auto}
+}
+/* responsive table — breaks into two stacked tables if needed */
+.month-table-wrap{margin-top:.5rem;width:100%;overflow:hidden}
+.month-table-inner{display:flex;flex-direction:column;gap:.3rem}
+.month-table-scroll{width:100%;overflow-x:auto}
+.month-table-scroll table{border-collapse:collapse;font-size:.78rem;min-width:0;table-layout:fixed}
+.month-table-scroll th{background:var(--night2);color:white;padding:6px 8px;text-align:center;font-family:var(--ui-font);white-space:nowrap}
+.month-table-scroll td{padding:5px 6px;border:1px solid var(--border);text-align:center;vertical-align:top;cursor:pointer;transition:background .15s;white-space:nowrap}
+.month-table-scroll td:hover{background:var(--cream)}
+.month-table-scroll td.cur-col{background:#FFFBEE;font-weight:700}
+.month-table-scroll td.cur-col:hover{background:#FFF0C0}
+.month-expand-btn{display:flex;align-items:center;gap:.35rem;background:none;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:.78rem;color:var(--text2);cursor:pointer;font-family:var(--ui-font);width:100%;margin-top:.4rem;transition:all .2s}
+.month-expand-btn:hover{background:var(--cream2);border-color:var(--gold);color:var(--gold2)}
+.month-expand-btn .arrow{transition:transform .2s;display:inline-block}
+.month-expand-btn.open .arrow{transform:rotate(180deg)}
 .chapter-card .drag-handle{cursor:grab;color:#ccc;font-size:1.1rem;user-select:none;flex-shrink:0}
 .btn-primary-action{padding:7px 14px;background:var(--night2);color:white;border:none;border-radius:var(--radius-sm);cursor:pointer;font-size:.82rem;font-family:var(--ui-font);font-weight:600;transition:background .2s;white-space:nowrap}
 .btn-primary-action:hover{background:#2a3f5c}
@@ -249,7 +271,7 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
 <body>
 
 <nav>
-  <div class="logo"><div style="display:flex;align-items:center;gap:.5rem"><img src="icon.png" alt="" style="height:32px;width:32px;object-fit:contain;border-radius:6px"><span>קָאפִּיטֶל</span></div><div class="logo-tagline">בלי חישוב ובלי בלבול — הפסוקים שלך מוכנים ללימוד</div></div>
+  <div class="logo"><div style="display:flex;align-items:center;gap:.5rem"><img src="icon.png" alt="" style="height:32px;width:32px;object-fit:contain;border-radius:6px"><span>קאַפִּיטל</span></div><div class="logo-tagline">בלי חישוב ובלי בלבול — הפסוקים שלך מוכנים ללימוד</div></div>
   <div class="nav-links">
     <button id="nav-search" class="active" onclick="showSection('search')">🔍 חיפוש</button>
     <button id="nav-personal" onclick="showSection('personal')">👤 הפרקים שלי</button>
@@ -271,7 +293,7 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
     <div class="date-inputs" style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:flex-end">
       <button class="date-tab active" id="stab-greg" onclick="switchDateType('greg')">לועזי</button>
       <button class="date-tab" id="stab-heb" onclick="switchDateType('heb')">עברי</button>
-      <div id="row-greg" style="display:flex;gap:.5rem;align-items:flex-end">
+      <div id="row-greg" style="display:flex;gap:.5rem;align-items:flex-end;flex-wrap:wrap">
         <div class="field"><label>תאריך</label><input type="date" id="greg-date"></div>
       </div>
       <div id="row-heb" style="display:none;gap:.5rem;align-items:flex-end;flex-wrap:wrap">
@@ -428,7 +450,8 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
     </div>
 
     <div class="print-action-row">
-      <button class="btn-gold" onclick="doPrint()" id="print-go-btn">🖨️ הדפס</button>
+      <button class="btn-gold" onclick="doPrint(false)" id="print-go-btn">🖨️ הדפס</button>
+      <button class="btn-outline" onclick="doPrint(true)" id="pdf-go-btn" style="border-color:var(--gold);color:var(--gold2)">📄 שמור כ-PDF</button>
       <span class="print-status" id="print-status"></span>
     </div>
   </div>
@@ -611,6 +634,15 @@ function formatCountdown(days){if(days<=0)return '\u05d4\u05d9\u05d5\u05dd!';if(
 
 // ── UI SEARCH ──
 var currentDateType='greg';
+function jumpToYear(val){
+  var y=parseInt(val);if(!y||y<1900||y>2024)return;
+  var d=document.getElementById('greg-date');
+  var cur=d.value;
+  var mm='01',dd='01';
+  if(cur){var parts=cur.split('-');if(parts[1])mm=parts[1];if(parts[2])dd=parts[2];}
+  d.value=y+'-'+mm+'-'+dd;
+}
+
 function switchDateType(t){
   currentDateType=t;
   document.getElementById('stab-greg').classList.toggle('active',t==='greg');
@@ -648,20 +680,16 @@ async function renderSearchResult(bm,bd,by){
   var firstM=c.months[0];var lastM=c.months[c.months.length-1];
   var cycleRange=firstM.hmn+' '+hYearStr(firstM.hy)+' – '+lastM.hmn+' '+hYearStr(lastM.hy);
   var html=
-    '<div class="chapter-card" style="flex-direction:column;align-items:stretch;cursor:default">'+
-      alertHtml+
-      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.7rem;flex-wrap:wrap">'+
-        '<div class="ch-left" style="flex:1">'+
-          '<div class="ch-top-row"><span class="ch-name">הפרק שלי לפי תאריך זה</span></div>'+
-          '<div class="ch-badge">פרק '+gem(c.pd.p)+' | פסוקים '+fmt.d+'</div>'+
-          '<div class="ch-meta" style="margin-top:.3rem">גיל '+c.age+' | מחזור '+c.numM+' חודשים ('+cycleRange+')'+(nbDays!==null?' | יום הולדת הבא: '+formatCountdown(nbDays):'')+' | חלק '+(c.idx+1)+'/'+c.numM+'</div>'+
+    '<div class="chapter-card" style="cursor:default">'+
+      '<div class="ch-left" style="width:100%">'+
+        alertHtml+
+        '<div class="ch-top-row" style="margin-bottom:.4rem"><span class="ch-name">הפרק שלי לפי תאריך זה</span>'+
+          '<button class="btn-secondary-action" id="add-from-search-btn" style="margin-right:auto;font-size:.76rem;padding:4px 10px">＋ הוסף לפרקים שלי</button>'+
         '</div>'+
-        '<div class="ch-right">'+
-          '<button class="btn-primary-action" id="search-read-btn">📖 לימוד נוכחי</button>'+
-          '<button class="btn-secondary-action" id="toggle-table-btn">📅 טבלת לימוד</button>'+
-          '<button class="btn-secondary-action" id="add-from-search-btn">＋ הוסף לפרקים שלי</button>'+
-        '</div>'+
-      '</div>'+
+        '<button class="ch-badge" id="search-read-btn">📖 פרק '+gem(c.pd.p)+' | פסוקים '+fmt.d+'</button>'+
+        '<div class="ch-meta" style="margin-top:.35rem">גיל '+c.age+' | מחזור '+c.numM+' חודשים ('+cycleRange+')'+(nbDays!==null?' | יום הולדת הבא: '+formatCountdown(nbDays):'')+' | חלק '+(c.idx+1)+'/'+c.numM+'</div>'+
+        '<div class="month-table-wrap"><button class="month-expand-btn" id="toggle-table-btn"><span class="arrow">▼</span> חודשים נוספים</button>'+
+        '<div class="collapse-content" id="full-table-wrap"></div></div>'+
       '<div id="search-add-form" style="display:none;margin-top:.7rem;background:var(--cream2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.8rem">'+
         '<div style="font-size:.82rem;color:var(--night2);font-weight:700;margin-bottom:.5rem">הוספת פרק</div>'+
         '<div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:.5rem">'+
@@ -677,38 +705,23 @@ async function renderSearchResult(bm,bd,by){
     '</div>';
   res.innerHTML=html;
   document.getElementById('search-read-btn').addEventListener('click',function(){openViewer(c.pd.p,c.idx+1,c.numM,vFrom,vTo,monthLabel,fmt.d,curSegs);});
-  document.getElementById('toggle-table-btn').addEventListener('click',function(){toggleTable();});
+  document.getElementById('toggle-table-btn').addEventListener('click',function(){toggleTable(this);});
   document.getElementById('add-from-search-btn').addEventListener('click',function(){var f=document.getElementById('search-add-form');f.style.display=f.style.display==='none'?'block':'none';});
   document.getElementById('saf-save-btn').addEventListener('click',function(){var name=document.getElementById('saf-name').value.trim();if(!name){alert('הזן שם');return;}var chs=getChapters();chs.push({id:Date.now(),name:name,bm:bm,bd:bd,by:by,alert:document.getElementById('saf-alert').checked});saveChapters(chs);document.getElementById('search-add-form').style.display='none';document.getElementById('saf-name').value='';alert('פרק נוסף בהצלחה!');});
 }
 
-function toggleTable(){var wrap=document.getElementById('full-table-wrap');if(wrap.classList.contains('open')){wrap.classList.remove('open');document.getElementById('toggle-table-btn').textContent='📅 טבלה מלאה';return;}wrap.classList.add('open');document.getElementById('toggle-table-btn').textContent='📅 סגור טבלה';if(wrap.dataset.built)return;wrap.dataset.built='1';buildTable(wrap,window._lastCalc.c);}
-
-async function buildTable(wrap,c){
-  var html='<div style="overflow-x:auto;margin-top:.6rem"><table class="study-table horiz-table" style="min-width:max-content">';
-  html+='<tr><th style="white-space:nowrap">חלק</th>';
-  for(var ti=0;ti<c.months.length;ti++)html+='<th style="text-align:center">'+(ti+1)+'</th>';
-  html+='</tr><tr><td style="font-size:.75rem;color:var(--text2)">ראש חודש</td>';
-  for(var ti=0;ti<c.months.length;ti++){var sm=c.months[ti];var isCur=(ti===c.idx);html+='<td style="font-size:.75rem;white-space:nowrap;text-align:center'+(isCur?';font-weight:700;background:#FFFBEE':'')+'">'+sm.hmn+'<br><small style="color:var(--text2)">'+hYearStr(sm.hy)+'</small></td>';}
-  html+='</tr><tr><td style="font-size:.75rem;color:var(--text2)">פסוקים</td>';
-  for(var ti=0;ti<c.months.length;ti++){var fmt=fmtSegs(c.ranges[ti]);var isCur=(ti===c.idx);html+='<td style="font-size:.75rem;text-align:center;white-space:nowrap'+(isCur?';font-weight:700;background:#FFFBEE':'')+'">'+fmt.d+'</td>';}
-  html+='</tr></table></div>';
-  // Action buttons per month cell
-  html+='<div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.5rem">';
-  for(var ti=0;ti<c.months.length;ti++){
-    var isCur2=(ti===c.idx);
-    html+='<button class="btn-sm'+(isCur2?' gold':'')+'\" data-ti="'+ti+'">היכנס ללימוד '+(ti+1)+'</button>';
-  }
-  html+='</div>';
-  wrap.innerHTML=html;
-  wrap.querySelectorAll('[data-ti]').forEach(function(btn){
-    var ti=parseInt(btn.dataset.ti);
-    btn.addEventListener('click',function(){
-      var segs=c.ranges[ti];var mLabel=c.months[ti].hmn+' '+hYearStr(c.months[ti].hy);
-      openViewer(c.pd.p,ti+1,c.numM,segs[0][0],segs[segs.length-1][1],mLabel,fmtSegs(segs).d,segs);window._curCalc=c;
-    });
-  });
+function toggleTable(btn){
+  var wrap=document.getElementById('full-table-wrap');
+  var b=btn||document.getElementById('toggle-table-btn');
+  var isOpen=wrap.classList.toggle('open');
+  if(b)b.classList.toggle('open',isOpen);
+  if(!isOpen)return;
+  if(wrap.dataset.built)return;
+  wrap.dataset.built='1';
+  buildResponsiveMonthTable(wrap,window._lastCalc.c);
 }
+
+
 
 // ── PERSONAL ──
 function getChapters(){try{return JSON.parse(localStorage.getItem('tehillim_chapters')||'[]');}catch(e){return[];}}
@@ -759,7 +772,7 @@ async function renderPersonal(){
     card.className='chapter-card';card.draggable=true;card.dataset.id=id;
     card.innerHTML=
       '<span class="drag-handle" style="flex-shrink:0;margin-left:.4rem">☰</span>'+
-      '<div class="ch-left">'+
+      '<div class="ch-left" style="flex:1;min-width:0">'+
         '<div class="ch-top-row">'+
           '<span class="ch-name">'+ch.name+(ch.alert?' <span class="tag">התראה</span>':'')+'</span>'+
           '<span style="font-size:.72rem;color:var(--text2);font-weight:400">'+gem(ch.bd)+' '+hmn(ch.bm)+' '+hYearStr(ch.by)+'</span>'+
@@ -768,17 +781,18 @@ async function renderPersonal(){
             '<button class="del-btn" data-act="del">✕</button>'+
           '</div>'+
         '</div>'+
-        '<div class="ch-badge">פרק '+gem(c.pd.p)+' | פסוקים '+fmt.d+'</div>'+
-        '<div class="ch-meta" style="margin-top:.3rem">גיל '+c.age+' | מחזור '+c.numM+' חודשים ('+cycleRange+')</div>'+
-        '<div class="collapse-content" id="ptable-'+id+'"></div>'+
-      '</div>'+
-      '<div class="ch-right">'+
-        '<button class="btn-primary-action" data-act="read">📖 לימוד נוכחי</button>'+
-        '<button class="btn-secondary-action" data-act="table">📅 טבלת לימוד</button>'+
+        '<button class="ch-badge" data-act="read">📖 פרק '+gem(c.pd.p)+' | פסוקים '+fmt.d+'</button>'+
+        '<div class="ch-meta" style="margin-top:.35rem">גיל '+c.age+' | מחזור '+c.numM+' חודשים ('+cycleRange+')</div>'+
+        '<div class="month-table-wrap"><button class="month-expand-btn" data-act="table"><span class="arrow">▼</span> חודשים נוספים</button>'+
+        '<div class="collapse-content" id="ptable-'+id+'"></div></div>'+
       '</div>';
     (function(el,cid,cp,cpart,ctotal,csegs,cvf,cvt,cmonth,cverses,cc){
       el.querySelector('[data-act="read"]').addEventListener('click',function(){openViewer(cp,cpart,ctotal,cvf,cvt,cmonth,cverses,csegs);window._curCalc=cc;});
-      el.querySelector('[data-act="table"]').addEventListener('click',function(){openPersonalTable(cid);});
+      var expandBtn=el.querySelector('[data-act="table"]');
+      expandBtn.addEventListener('click',function(){
+        var open=expandBtn.classList.toggle('open');
+        openPersonalTable(cid,!open);
+      });
       el.querySelector('[data-act="edit"]').addEventListener('click',function(){editChapter(cid);});
       el.querySelector('[data-act="del"]').addEventListener('click',function(){deleteChapter(cid);});
       el.addEventListener('dragstart',function(e){dragStart(e,cid);});
@@ -791,36 +805,43 @@ async function renderPersonal(){
   }
 }
 
-async function openPersonalTable(id){
+async function openPersonalTable(id,forceClose){
   var wrap=document.getElementById('ptable-'+id);
-  if(wrap.classList.contains('open')){wrap.classList.remove('open');return;}
-  wrap.classList.add('open');if(wrap.dataset.built)return;wrap.dataset.built='1';
+  if(forceClose||wrap.classList.contains('open')){wrap.classList.remove('open');return;}
+  wrap.classList.add('open');
+  if(wrap.dataset.built)return;
+  wrap.dataset.built='1';
   var c=window._chCalc[id];if(!c)return;
-  // Build horizontal table with "היכנס ללימוד" buttons per cell
-  var html='<div style="overflow-x:auto;margin-top:.7rem"><table class="study-table horiz-table" style="min-width:max-content">';
-  html+='<tr><th>חלק</th>';
-  for(var ti=0;ti<c.months.length;ti++)html+='<th style="text-align:center">'+(ti+1)+'</th>';
-  html+='</tr><tr><td style="font-size:.74rem;color:var(--text2)">ראש חודש</td>';
-  for(var ti=0;ti<c.months.length;ti++){var sm=c.months[ti];var isCur=(ti===c.idx);html+='<td style="font-size:.73rem;white-space:nowrap;text-align:center'+(isCur?';font-weight:700;background:#FFFBEE':'')+'">'+sm.hmn+'<br><small>'+hYearStr(sm.hy)+'</small></td>';}
-  html+='</tr><tr><td style="font-size:.74rem;color:var(--text2)">פסוקים</td>';
-  for(var ti=0;ti<c.months.length;ti++){var fmt=fmtSegs(c.ranges[ti]);var isCur=(ti===c.idx);html+='<td style="font-size:.73rem;text-align:center;white-space:nowrap'+(isCur?';font-weight:700;background:#FFFBEE':'')+'">'+fmt.d+'</td>';}
-  html+='</tr><tr><td style="font-size:.74rem;color:var(--text2)">כניסה</td>';
-  for(var ti=0;ti<c.months.length;ti++){var isCur=(ti===c.idx);html+='<td style="text-align:center;padding:4px 6px"><button class="btn-sm'+(isCur?' gold':'')+'\" data-ti2="'+ti+'">היכנס</button></td>';}
-  html+='</tr></table></div>';
+  buildResponsiveMonthTable(wrap,c);
+}
+
+function buildResponsiveMonthTable(wrap,c){
+  var months=c.months;var ranges=c.ranges;var curIdx=c.idx;
+  // Split into chunks of 6 to avoid horizontal overflow
+  var chunkSize=6;
+  var html='<div class="month-table-inner">';
+  for(var start=0;start<months.length;start+=chunkSize){
+    var end=Math.min(start+chunkSize,months.length);
+    html+='<div class="month-table-scroll"><table style="width:100%"><thead><tr>';
+    html+='<th style="width:3.5rem;font-size:.7rem">📖</th>';
+    for(var ti=start;ti<end;ti++){var isCur=(ti===curIdx);html+='<th'+(isCur?' style="background:var(--gold);color:var(--night)"':'')+'>'+(ti+1)+'</th>';}
+    html+='</tr></thead><tbody>';
+    html+='<tr><td style="font-size:.7rem;color:var(--text2);text-align:right;white-space:nowrap">ר"ח</td>';
+    for(var ti=start;ti<end;ti++){var sm=months[ti];var isCur=(ti===curIdx);html+='<td class="'+(isCur?'cur-col':'')+'" data-ti="'+ti+'">'+sm.hmn+'<br><small style="color:var(--text2)">'+hYearStr(sm.hy)+'</small></td>';}
+    html+='</tr><tr><td style="font-size:.7rem;color:var(--text2);text-align:right;white-space:nowrap">פסוקים</td>';
+    for(var ti=start;ti<end;ti++){var fmt=fmtSegs(ranges[ti]);var isCur=(ti===curIdx);html+='<td class="'+(isCur?'cur-col':'')+'" data-ti="'+ti+'">'+fmt.d+'</td>';}
+    html+='</tr></tbody></table></div>';
+  }
+  html+='</div>';
   wrap.innerHTML=html;
-  wrap.querySelectorAll('[data-ti2]').forEach(function(btn){
-    var ti=parseInt(btn.dataset.ti2);
-    btn.addEventListener('click',function(){
+  wrap.querySelectorAll('td[data-ti]').forEach(function(td){
+    var ti=parseInt(td.dataset.ti);
+    td.addEventListener('click',function(){
       var segs=c.ranges[ti];var mLabel=c.months[ti].hmn+' '+hYearStr(c.months[ti].hy);
       openViewer(c.pd.p,ti+1,c.numM,segs[0][0],segs[segs.length-1][1],mLabel,fmtSegs(segs).d,segs);window._curCalc=c;
     });
   });
 }
-
-var dragSrcId=null;
-function dragStart(e,id){dragSrcId=id;e.currentTarget.classList.add('dragging');}
-function dragOver(e){e.preventDefault();e.currentTarget.classList.add('drag-over');}
-function dragLeave(e){e.currentTarget.classList.remove('drag-over');}
 function dragDrop(e,targetId){e.preventDefault();e.currentTarget.classList.remove('drag-over');if(dragSrcId===targetId)return;var chs=getChapters();var si=chs.findIndex(function(c){return c.id===dragSrcId;});var ti=chs.findIndex(function(c){return c.id===targetId;});chs.splice(ti,0,chs.splice(si,1)[0]);saveChapters(chs);renderPersonal();}
 
 // ── VIEWER ──
@@ -1034,11 +1055,13 @@ function buildChCommHtml(chData,keys){
 async function getHebDateStr(d){try{var h=await g2h(d);if(h&&h.hd)return gem(h.hd)+' '+hmn(h.hm)+' '+hYearStr(h.hy);}catch(e){}return '';}
 function getTodayHebStr(){var today=new Date();today.setHours(12);return getHebDateStr(today);}
 
-async function doPrint(){
-  var status=document.getElementById('print-status');var goBtn=document.getElementById('print-go-btn');
-  goBtn.disabled=true;
+async function doPrint(asPdf){
+  var status=document.getElementById('print-status');
+  var goBtn=document.getElementById('print-go-btn');
+  var pdfBtn=document.getElementById('pdf-go-btn');
+  if(goBtn)goBtn.disabled=true;if(pdfBtn)pdfBtn.disabled=true;
   // Show progress modal
-  showPrintProgress('מכין נתונים...');
+  showPrintProgress(asPdf?'מכין PDF...':'מכין נתונים...');
   var output=document.getElementById('print-output');
   var today=new Date();today.setHours(0,0,0,0);
   var todayHeb=await getTodayHebStr();
@@ -1047,9 +1070,18 @@ async function doPrint(){
     if(_printOpt===1){await doPrintCurrent(output,dateStamp,today);}
     else if(_printOpt===2){await doPrintAnnual(output,dateStamp,today);}
     else{await doPrintSiddur(output,dateStamp,today);}
-    hidePrintProgress();status.textContent='';setTimeout(function(){window.print();},300);
+    hidePrintProgress();status.textContent='';
+    if(asPdf){
+      // Inject PDF hint CSS, trigger print dialog (user chooses "Save as PDF")
+      var style=document.createElement('style');style.id='pdf-hint-style';
+      style.textContent='@media print{body::after{content:"לשמירה כ-PDF: בחר \\"שמור כ-PDF\\" במקום מדפסת";display:none}}';
+      document.head.appendChild(style);
+      setTimeout(function(){window.print();var s=document.getElementById('pdf-hint-style');if(s)s.remove();},300);
+    }else{
+      setTimeout(function(){window.print();},300);
+    }
   }catch(e){hidePrintProgress();status.textContent='שגיאה: '+e.message;console.error(e);}
-  goBtn.disabled=false;
+  if(goBtn)goBtn.disabled=false;if(pdfBtn)pdfBtn.disabled=false;
 }
 
 var _progModal=null;
@@ -1215,7 +1247,12 @@ window.onload=async function(){
     document.querySelector('nav').classList.toggle('shrunk',window.scrollY>60);
   });
   await loadFromHash();
-  renderPersonal();
+  // Default to personal section if chapters exist
+  if(!window.location.hash && getChapters().length>0){
+    showSection('personal');
+  }else{
+    renderPersonal();
+  }
   getAllRabotein();
   loadHakdaasha();
 };
