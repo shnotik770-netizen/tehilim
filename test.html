@@ -27,11 +27,9 @@
 body{font-family:var(--ui-font);background:var(--cream);color:var(--text);direction:rtl;min-height:100vh;font-size:15px;line-height:1.6}
 
 /* ─── NAV ─── */
-nav{background:var(--night);color:white;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;box-shadow:var(--shadow-lg);position:sticky;top:0;z-index:50;transition:padding .25s}
-nav.shrunk{padding:.45rem 1.5rem}
-nav .logo{font-family:'Frank Ruhl Libre',serif;font-size:1.5rem;font-weight:900;color:white;letter-spacing:.01em;transition:font-size .25s;display:flex;flex-direction:column;gap:0}
-nav.shrunk .logo{font-size:1.1rem}
-nav .logo .logo-tagline{font-size:.68rem;font-weight:700;color:var(--gold-light);letter-spacing:.01em;font-family:var(--ui-font);margin-top:-1px;transition:opacity .25s}
+nav{background:var(--night);color:white;padding:.75rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;box-shadow:var(--shadow-lg);position:sticky;top:0;z-index:50}
+nav .logo{font-family:'Frank Ruhl Libre',serif;font-size:1.5rem;font-weight:900;color:white;letter-spacing:.01em;display:flex;flex-direction:column;gap:0}
+nav .logo .logo-tagline{font-size:.68rem;font-weight:700;color:var(--gold-light);letter-spacing:.01em;font-family:var(--ui-font);margin-top:-1px}
 nav.shrunk .logo .logo-tagline{opacity:0;height:0;overflow:hidden;margin:0}
 nav .logo span{color:var(--gold)}
 nav .nav-links{display:flex;gap:.6rem}
@@ -904,6 +902,105 @@ async function exportChapters(){
   });
 }
 
+// ── DATE PARSING — flexible formats ──
+var HEB_MONTHS_MAP={
+  'תשרי':'Tishrei','חשון':'Cheshvan','חשוון':'Cheshvan','כסלו':'Kislev','טבת':'Tevet',
+  'שבט':'Sh\'vat',"שב'ט":'Sh\'vat','אדר':'Adar',"אד\"ר":'Adar',"אד'ר":'Adar',
+  'אדר א':'Adar I',"אדר א'":'Adar I','אדר ב':'Adar II',"אדר ב'":'Adar II',
+  'ניסן':'Nisan','אייר':'Iyar','סיון':'Sivan','תמוז':'Tamuz','אב':'Av','אלול':'Elul'
+};
+var HEB_YEAR_LETTERS={
+  'א':1,'ב':2,'ג':3,'ד':4,'ה':5,'ו':6,'ז':7,'ח':8,'ט':9,
+  'י':10,'כ':20,'ל':30,'מ':40,'נ':50,'ס':60,'ע':70,'פ':80,'צ':90,
+  'ק':100,'ר':200,'ש':300,'ת':400
+};
+var HEB_DAY_LETTERS={
+  'א':1,'ב':2,'ג':3,'ד':4,'ה':5,'ו':6,'ז':7,'ח':8,'ט':9,
+  'י':10,'יא':11,'יב':12,'יג':13,'יד':14,'טו':15,'טז':16,
+  'יז':17,'יח':18,'יט':19,'כ':20,'כא':21,'כב':22,'כג':23,'כד':24,
+  'כה':25,'כו':26,'כז':27,'כח':28,'כט':29,'ל':30
+};
+
+function parseHebYear(str){
+  // e.g. "התשפ\"ד" or "תשפד" or "ה'תשפ\"ד"
+  str=str.replace(/['"״׳\u05f4\u05f3]/g,'').replace(/^ה/,'').trim();
+  // Sum letter values, add 5000
+  var val=0;
+  for(var i=0;i<str.length;i++){
+    var v=HEB_YEAR_LETTERS[str[i]];
+    if(v)val+=v;
+  }
+  return val>0?val+5000:null;
+}
+
+function parseHebDay(str){
+  str=str.replace(/['"״׳\u05f4\u05f3]/g,'').trim();
+  // Try direct number first
+  var n=parseInt(str);
+  if(!isNaN(n)&&n>=1&&n<=30)return n;
+  // Try letter lookup (e.g. 'טו', 'כא')
+  return HEB_DAY_LETTERS[str]||null;
+}
+
+function parseHebDateStr(str){
+  // Format: "א בניסן תשפד" or "ג אד\"ר התשנ" or "טו בשבט תשע\"ה"
+  str=str.replace(/\bב/,'').trim(); // remove prefix ב
+  // Split by spaces
+  var parts=str.trim().split(/\s+/);
+  if(parts.length<3)return null;
+  var dayStr=parts[0];
+  // Month may be 1 or 2 words (e.g. "אדר א")
+  var monthStr,yearStr;
+  if(parts.length>=4&&(parts[2]==="א'"||parts[2]==="א"||parts[2]==="ב'"||parts[2]==="ב")){
+    monthStr=parts[1]+' '+parts[2];
+    yearStr=parts.slice(3).join('');
+  }else{
+    monthStr=parts[1];
+    yearStr=parts.slice(2).join('');
+  }
+  var bd=parseHebDay(dayStr);
+  var bm=HEB_MONTHS_MAP[monthStr.replace(/['"״׳\u05f4\u05f3]/g,'').trim()];
+  var by=parseHebYear(yearStr);
+  if(!bd||!bm||!by)return null;
+  return{bd,bm,by};
+}
+
+function parseGregDateStr(str){
+  // YYYY-MM-DD
+  var m=str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,parseInt(m[3]));
+  // DD/MM/YYYY or D/M/YYYY
+  m=str.match(/^(\d{1,2})[\/.](\d{1,2})[\/.](\d{2,4})$/);
+  if(m){
+    var y=parseInt(m[3]);if(y<100)y+=2000;
+    return new Date(y,parseInt(m[2])-1,parseInt(m[1]));
+  }
+  // DD/MM/YY
+  m=str.match(/^(\d{1,2})[\/.](\d{1,2})[\/.](\d{2})$/);
+  if(m){return new Date(2000+parseInt(m[3]),parseInt(m[2])-1,parseInt(m[1]));}
+  return null;
+}
+
+async function parseDateFromStr(dateStr){
+  // 1. heb: prefix (internal format)
+  if(dateStr.startsWith('heb:')){
+    var hp=dateStr.slice(4).split('/');
+    if(hp.length===3)return{bd:parseInt(hp[0]),bm:hp[1],by:parseInt(hp[2])};
+    return null;
+  }
+  // 2. Hebrew date string (contains Hebrew letters and a year > 5000)
+  if(/[\u05d0-\u05ea]/.test(dateStr)&&!/^\d/.test(dateStr)){
+    return parseHebDateStr(dateStr);
+  }
+  // 3. Gregorian — parse to Date, then convert
+  var d=parseGregDateStr(dateStr);
+  if(d&&!isNaN(d)){
+    var hb=await g2h(d);
+    if(hb&&hb.hd)return{bd:hb.hd,bm:hb.hm,by:hb.hy};
+  }
+  return null;
+}
+
 async function importChapters(){
   var ta=document.getElementById('import-textarea');
   var text=ta.value.trim();
@@ -912,28 +1009,21 @@ async function importChapters(){
   if(!lines.length){alert('לא נמצאו שורות לייבוא');return;}
   var toImport=[];var errors=[];
   for(var i=0;i<lines.length;i++){
-    var parts=lines[i].split(',');
-    if(parts.length<2){errors.push('שורה '+(i+1)+': פורמט שגוי');continue;}
-    var name=parts[0].trim();var dateStr=parts[1].trim();
+    var line=lines[i];
+    // Split on first comma only
+    var commaIdx=line.indexOf(',');
+    if(commaIdx<1){errors.push('שורה '+(i+1)+': חסר פסיק');continue;}
+    var name=line.slice(0,commaIdx).trim();
+    var dateStr=line.slice(commaIdx+1).trim();
     if(!name){errors.push('שורה '+(i+1)+': שם חסר');continue;}
-    var bm,bd,by;
-    if(dateStr.startsWith('heb:')){
-      var hp=dateStr.slice(4).split('/');
-      if(hp.length!==3){errors.push('שורה '+(i+1)+': תאריך עברי שגוי');continue;}
-      bd=parseInt(hp[0]);bm=hp[1];by=parseInt(hp[2]);
-    }else{
-      try{
-        var hb=await g2h(new Date(dateStr));
-        if(!hb||hb.error){errors.push('שורה '+(i+1)+': המרת תאריך נכשלה');continue;}
-        bm=hb.hm;bd=hb.hd;by=hb.hy;
-      }catch(e){errors.push('שורה '+(i+1)+': '+e.message);continue;}
-    }
-    if(bm==="Shvat")bm="Sh'vat";
-    toImport.push({id:Date.now()+i,name,bm,bd,by,alert:false});
+    var parsed=await parseDateFromStr(dateStr);
+    if(!parsed){errors.push('שורה '+(i+1)+' ('+name+'): לא הצלחתי לפענח "'+dateStr+'"');continue;}
+    var bm=parsed.bm;if(bm==='Shvat')bm="Sh'vat";
+    toImport.push({id:Date.now()+i,name,bm,bd:parsed.bd,by:parsed.by,alert:false});
   }
   if(!toImport.length){alert('לא הצלחתי לייבא אף שורה.\n'+errors.join('\n'));return;}
   var msg='ייבוא '+toImport.length+' פרקים';
-  if(errors.length)msg+='\n\n⚠️ '+errors.length+' שגיאות:\n'+errors.join('\n');
+  if(errors.length)msg+='\n\n⚠️ '+errors.length+' שורות שנכשלו:\n'+errors.join('\n');
   msg+='\n\nהוסף לפרקים הקיימים?';
   if(!confirm(msg))return;
   saveChapters(getChapters().concat(toImport));
@@ -986,7 +1076,6 @@ async function renderPersonal(){
     var card=document.createElement('div');
     card.className='chapter-card';card.draggable=true;card.dataset.id=id;
     card.innerHTML=
-      '<span class="drag-handle" style="flex-shrink:0;margin-left:.4rem">☰</span>'+
       '<div class="ch-left" style="flex:1;min-width:0">'+
         '<div class="ch-top-row">'+
           '<span class="ch-name">'+ch.name+(ch.alert?' <span class="tag">התראה</span>':'')+'</span>'+
@@ -1636,10 +1725,6 @@ function renderDedication(){
 window.onload=async function(){
   var hy=document.getElementById('heb-year');
   if(hy){hy.addEventListener('input',function(){var n=parseInt(this.value);var el=document.getElementById('heb-year-letters');if(el)el.textContent=n>=5000&&n<=6000?hYearStr(n):'';});}
-  // Shrink nav on scroll
-  window.addEventListener('scroll',function(){
-    document.querySelector('nav').classList.toggle('shrunk',window.scrollY>60);
-  });
   await loadFromHash();
   renderPersonal();
   if(!window.location.hash && getChapters().length>0){
