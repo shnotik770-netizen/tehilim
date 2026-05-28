@@ -242,10 +242,10 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
   #print-output{display:block!important}
   body{background:white!important;color:black!important}
   .prt-date-stamp{font-size:.72rem;color:#777;text-align:left;direction:ltr;margin-bottom:.5rem}
-  .prt-header{text-align:center;margin-bottom:1.2rem;padding-bottom:.7rem;border-bottom:2px solid #C5A059}
+  .prt-header{text-align:center;margin-bottom:1.2rem;padding-bottom:.7rem;border-bottom:2px solid #C5A059;break-after:avoid;page-break-after:avoid}
   .prt-main-title{font-size:1.25rem;font-weight:700;color:#111827}
   .prt-sub-title{font-size:.85rem;color:#555;margin-top:.2rem}
-  .prt-month-header{background:#1F293B!important;color:white!important;padding:.45rem .9rem;font-weight:700;font-size:.92rem;margin:1.1rem 0 .5rem;border-radius:4px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .prt-month-header{background:#1F293B!important;color:white!important;padding:.45rem .9rem;font-weight:700;font-size:.92rem;margin:1.1rem 0 .5rem;border-radius:4px;-webkit-print-color-adjust:exact;print-color-adjust:exact;break-after:avoid;page-break-after:avoid}
   .prt-pasuk{margin-bottom:.55rem;padding:.4rem .8rem;border-right:3px solid #C5A059}
   .prt-pasuk-num{font-size:.7em;color:#C5A059;font-weight:700;margin-bottom:.1rem}
   .prt-pasuk-text{font-size:1em;line-height:1.9;font-weight:700;font-family:'Frank Ruhl Libre',serif}
@@ -265,6 +265,9 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
   .prt-siddur-table th{background:#1F293B!important;color:white!important;padding:6px 10px;text-align:right;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .prt-siddur-table td{padding:5px 10px;border-bottom:1px solid #e0ddd5;text-align:right}
   .page-break{page-break-before:always;margin:0;padding:0}
+  .prt-site-footer{margin-top:1.5rem;padding-top:.7rem;border-top:2px solid #C9A84C;display:flex;justify-content:space-between;align-items:baseline;gap:1rem;font-size:.8rem;color:#444;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .prt-footer-right{font-size:.82rem;color:#1F293B}
+  .prt-footer-left{font-size:.78rem;color:#555;font-style:italic;text-align:left}
 }
 </style>
 </head>
@@ -558,6 +561,7 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
 </div>
 
 <footer>
+  <span id="footer-ded-text" style="display:block;margin-bottom:.3rem;color:var(--night2);font-style:italic"></span>
   <span id="footer-contact"></span>
 </footer>
 
@@ -753,14 +757,13 @@ async function renderPersonal(){
   for(var i=0;i<chs.length;i++){
     var ch=chs[i];
     var c=await calcForBirth(ch.bm,ch.bd,ch.by,today);
-    window._chCalc[ch.id]=c;
-    // Update header subtitle with current RC from first chapter
     if(!_rcSubtitleSet){
       _rcSubtitleSet=true;
       var sub=document.getElementById('personal-rc-subtitle');
       if(sub){var curMSub=c.months[c.idx];sub.textContent='הלימוד כעת לראש חודש '+curMSub.hmn+' '+hYearStr(curMSub.hy);}
     }
     var fmt=fmtSegs(c.ranges[c.idx]);
+    window._chCalc[ch.id]=c;
     var curM=c.months[c.idx];
     var curSegs=c.ranges[c.idx];
     var vFrom=curSegs[0][0],vTo=curSegs[curSegs.length-1][1];
@@ -790,8 +793,7 @@ async function renderPersonal(){
       el.querySelector('[data-act="read"]').addEventListener('click',function(){openViewer(cp,cpart,ctotal,cvf,cvt,cmonth,cverses,csegs);window._curCalc=cc;});
       var expandBtn=el.querySelector('[data-act="table"]');
       expandBtn.addEventListener('click',function(){
-        var open=expandBtn.classList.toggle('open');
-        openPersonalTable(cid,!open);
+        openPersonalTable(cid,expandBtn);
       });
       el.querySelector('[data-act="edit"]').addEventListener('click',function(){editChapter(cid);});
       el.querySelector('[data-act="del"]').addEventListener('click',function(){deleteChapter(cid);});
@@ -805,23 +807,32 @@ async function renderPersonal(){
   }
 }
 
-async function openPersonalTable(id,forceClose){
+async function openPersonalTable(id,btn){
   var wrap=document.getElementById('ptable-'+id);
-  if(forceClose||wrap.classList.contains('open')){wrap.classList.remove('open');return;}
+  var isOpen=wrap.classList.contains('open');
+  if(isOpen){
+    wrap.classList.remove('open');
+    if(btn)btn.classList.remove('open');
+    return;
+  }
   wrap.classList.add('open');
-  if(wrap.dataset.built)return;
+  if(btn)btn.classList.add('open');
   wrap.dataset.built='1';
-  var c=window._chCalc[id];if(!c)return;
+  var c=window._chCalc[id];
+  if(!c)return;
   buildResponsiveMonthTable(wrap,c);
 }
 
 function buildResponsiveMonthTable(wrap,c){
   var months=c.months;var ranges=c.ranges;var curIdx=c.idx;
-  // Split into chunks of 6 to avoid horizontal overflow
-  var chunkSize=6;
+  var total=months.length;
+  // Always split into exactly 2 rows: first ceil(total/2), second floor(total/2)
+  var firstLen=Math.ceil(total/2);
+  var chunks=[[0,firstLen],[firstLen,total]];
   var html='<div class="month-table-inner">';
-  for(var start=0;start<months.length;start+=chunkSize){
-    var end=Math.min(start+chunkSize,months.length);
+  for(var ci=0;ci<chunks.length;ci++){
+    var start=chunks[ci][0],end=chunks[ci][1];
+    if(start>=end)continue;
     html+='<div class="month-table-scroll"><table style="width:100%"><thead><tr>';
     html+='<th style="width:3.5rem;font-size:.7rem">📖</th>';
     for(var ti=start;ti<end;ti++){var isCur=(ti===curIdx);html+='<th'+(isCur?' style="background:var(--gold);color:var(--night)"':'')+'>'+(ti+1)+'</th>';}
@@ -842,6 +853,10 @@ function buildResponsiveMonthTable(wrap,c){
     });
   });
 }
+var dragSrcId=null;
+function dragStart(e,id){dragSrcId=id;e.currentTarget.classList.add('dragging');}
+function dragOver(e){e.preventDefault();e.currentTarget.classList.add('drag-over');}
+function dragLeave(e){e.currentTarget.classList.remove('drag-over');}
 function dragDrop(e,targetId){e.preventDefault();e.currentTarget.classList.remove('drag-over');if(dragSrcId===targetId)return;var chs=getChapters();var si=chs.findIndex(function(c){return c.id===dragSrcId;});var ti=chs.findIndex(function(c){return c.id===targetId;});chs.splice(ti,0,chs.splice(si,1)[0]);saveChapters(chs);renderPersonal();}
 
 // ── VIEWER ──
@@ -1120,7 +1135,7 @@ async function doPrintCurrent(output,dateStamp,today){
     var allData={verses:[],comm:{}};
     for(var si=0;si<segs.length;si++){var seg=segs[si],vf=seg[0],vt=seg[1];var d=await fetchVerseData(c.pd.p,vf,vt);d.verses.forEach(function(v){allData.verses.push(v);allData.comm[v.ckey]=d.comm[v.ckey];});}
     var chData=allRab[String(c.pd.p)];
-    if(!isFirst)html+='<div class="page-break"></div>';isFirst=false;
+    if(!isFirst)html+='<hr style="border:none;border-top:2px solid #C9A84C;margin:1.5rem 0">';isFirst=false;
     html+='<div class="prt-header"><div class="prt-main-title">תהילים — פרק '+gem(c.pd.p)+'</div>';
     html+='<div class="prt-sub-title">'+ch.name+' | לימוד ראש חודש '+monthLabel+' | חלק '+(c.idx+1)+' מתוך '+c.numM+'</div></div>';
     if(chCommKeys.length)html+=buildChCommHtml(chData,chCommKeys);
@@ -1128,7 +1143,8 @@ async function doPrintCurrent(output,dateStamp,today){
     allData.verses.forEach(function(v){html+=buildPasukHtml(v,allData.comm[v.ckey],commKeys);});
   }
   updatePrintProgress('מסיים...',95);
-  output.innerHTML='<div style="font-size:'+_printFontSize+'%">'+html+'</div>';
+  var prtFooter='<div class="prt-site-footer"><div class="prt-footer-right"><strong style="font-size:1.05em">קאַפִּיטל</strong> — בלי חישוב ובלי בלבול — הפסוקים שלך מוכנים ללימוד</div><div class="prt-footer-left">'+(window._dedSimpleText||'')+' </div></div>';
+  output.innerHTML='<div style="font-size:'+_printFontSize+'%">'+html+prtFooter+'</div>';
 }
 
 async function doPrintAnnual(output,dateStamp,today){
@@ -1165,7 +1181,8 @@ async function doPrintAnnual(output,dateStamp,today){
     for(var mi2=0;mi2<c.months.length;mi2++){var isCur6=(mi2===c.idx);var fmt5=fmtSegs(c.ranges[mi2]);html+='<td style="font-size:.8em;white-space:nowrap;text-align:center'+(isCur6?';font-weight:700':'')+'">'+fmt5.d+'</td>';}
     html+='</tr></table></div></div>';
   }
-  output.innerHTML='<div style="font-size:'+_printFontSize+'%">'+html+'</div>';
+  var prtFooter='<div class="prt-site-footer"><div class="prt-footer-right"><strong style="font-size:1.05em">קאַפִּיטל</strong> — בלי חישוב ובלי בלבול — הפסוקים שלך מוכנים ללימוד</div><div class="prt-footer-left">'+(window._dedSimpleText||'')+' </div></div>';
+  output.innerHTML='<div style="font-size:'+_printFontSize+'%">'+html+prtFooter+'</div>';
 }
 
 async function doPrintSiddur(output,dateStamp,today){
@@ -1182,16 +1199,17 @@ async function doPrintSiddur(output,dateStamp,today){
   html+='<div class="prt-header"><div class="prt-main-title">פרקי תהילים אישיים</div></div>';
   html+='<table class="prt-siddur-table"><tr><th>שם</th><th>פרק</th><th>גיל</th><th>יום הולדת הבא</th></tr>';
   rows.forEach(function(r){html+='<tr><td>'+r.name+'</td><td>'+r.psalm+'</td><td>'+r.age+'</td><td>'+(r.nextBD?r.nextBD+(r.daysTo!==null?' ('+formatCountdown(r.daysTo)+')':''):'—')+'</td></tr>';});
-  output.innerHTML='<div style="font-size:'+_printFontSize+'%">'+html+'</table></div>';
+  var prtFooter='<div class="prt-site-footer"><div class="prt-footer-right"><strong style="font-size:1.05em">קאַפִּיטל</strong> — בלי חישוב ובלי בלבול — הפסוקים שלך מוכנים ללימוד</div><div class="prt-footer-left">'+(window._dedSimpleText||'')+' </div></div>';
+  output.innerHTML='<div style="font-size:'+_printFontSize+'%">'+html+'</table>'+prtFooter+'</div>';
 }
 
 // ── NAVIGATION ──
-function showSection(s){
+function showSection(s,skipRender){
   document.querySelectorAll('.section').forEach(function(el){el.classList.remove('active');});
   document.getElementById('sec-'+s).classList.add('active');
   document.querySelectorAll('.nav-links button').forEach(function(b){b.classList.remove('active');});
   var nb=document.getElementById('nav-'+s);if(nb)nb.classList.add('active');
-  if(s==='personal')renderPersonal();
+  if(s==='personal'&&!skipRender)renderPersonal();
   if(s==='print')renderPrintSection();
 }
 
@@ -1233,10 +1251,20 @@ function renderDedication(){
   if(ded.main_name)html+='<div class="ded-main-name">'+ded.main_name+'</div>';
   if(ded.content_lines&&ded.content_lines.length){ded.content_lines.forEach(function(l){if(l)html+='<div class="ded-line">'+l+'</div>';});}
   if(ded.footer_text){html+='<div class="ded-sep"></div><div class="ded-footer">'+ded.footer_text+'</div>';}
-  if(deds.length>1){html+='<div class="ded-dots">';deds.forEach(function(d,i){html+='<div class="ded-dot'+(i===_dedIdx?' active':'')+'"></div>';});html+='</div>';}
+  if(deds.length>1){html+='<div class="ded-dots">';deds.forEach(function(d,i){html+='<div class="ded-dot'+(i===_dedIdx?' active':'')+'" onclick="_dedIdx='+i+';renderDedication()"></div>';});html+='</div>';}
   html+='</div></div>';
   var dw=document.getElementById('dedication-wrap');
   if(dw){dw.style.opacity='0';dw.innerHTML=html;setTimeout(function(){dw.style.opacity='1';},50);}
+  // Full one-line from all fields, bold for titles/names
+  var parts=[];
+  if(ded.main_title)parts.push('<strong>'+ded.main_title+'</strong>');
+  if(ded.subtitle)parts.push(ded.subtitle);
+  if(ded.type_title)parts.push(ded.type_title);
+  if(ded.main_name)parts.push('<strong>'+ded.main_name+'</strong>');
+  if(ded.content_lines&&ded.content_lines.length)ded.content_lines.forEach(function(l){if(l&&l.trim())parts.push(l.trim());});
+  if(ded.footer_text)parts.push(ded.footer_text);
+  window._dedSimpleText=parts.join(' | ');
+  var fdt=document.getElementById('footer-ded-text');if(fdt)fdt.innerHTML=window._dedSimpleText;
 }
 
 window.onload=async function(){
@@ -1247,11 +1275,9 @@ window.onload=async function(){
     document.querySelector('nav').classList.toggle('shrunk',window.scrollY>60);
   });
   await loadFromHash();
-  // Default to personal section if chapters exist
+  renderPersonal();
   if(!window.location.hash && getChapters().length>0){
-    showSection('personal');
-  }else{
-    renderPersonal();
+    showSection('personal', true);
   }
   getAllRabotein();
   loadHakdaasha();
