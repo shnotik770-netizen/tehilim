@@ -123,6 +123,18 @@ nav .nav-links button.active,nav .nav-links button:hover{background:var(--gold);
 .ch-inline-actions button{padding:2px 8px;font-size:.7rem;border-radius:4px;cursor:pointer;font-family:var(--ui-font);border:1px solid var(--border);background:transparent;color:var(--text2);transition:all .15s}
 .ch-inline-actions button:hover{background:var(--cream);border-color:var(--gold2);color:var(--gold2)}
 .ch-inline-actions button.del-btn:hover{background:#fff0f0;color:#c00;border-color:#fcc}
+.print-type-pill{padding:8px 18px;border:2px solid var(--border);border-radius:30px;cursor:pointer;font-size:.85rem;font-family:var(--ui-font);background:white;font-weight:600;color:var(--text2);transition:all .15s}
+.print-type-pill:hover{border-color:var(--gold);color:var(--gold2)}
+.print-type-pill.active{background:var(--night2);color:var(--gold);border-color:var(--night2)}
+.pconf-row{display:flex;gap:1.2rem;align-items:flex-start;flex-wrap:wrap}
+.pconf-col{flex:1;min-width:180px}
+.pconf-label{font-size:.78rem;font-weight:700;color:var(--night2);margin-bottom:.35rem;display:flex;align-items:center;gap:.4rem}
+.pill-checks{display:flex;flex-wrap:wrap;gap:.3rem}
+.check-pill{display:inline-flex;align-items:center;gap:.3rem;padding:4px 10px;border:1px solid var(--border);border-radius:15px;cursor:pointer;font-size:.76rem;font-family:var(--ui-font);background:white;transition:all .15s;white-space:nowrap;color:var(--text2)}
+.check-pill:hover{border-color:var(--gold);color:var(--gold2)}
+.check-pill input{width:12px;height:12px;accent-color:var(--gold2);cursor:pointer}
+.pill-sm{padding:3px 9px;border:1px solid var(--border);border-radius:10px;background:white;font-size:.72rem;font-family:var(--ui-font);cursor:pointer;color:var(--text2);transition:all .15s}
+.pill-sm:hover{border-color:var(--gold);color:var(--gold2)}
 .pconf-collapse-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:.4rem .6rem;background:var(--cream2);border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-weight:700;color:var(--night2);margin:.5rem 0;transition:background .15s}
 .pconf-collapse-header:hover{background:var(--cream);border-color:var(--gold)}
 .pconf-collapse-body{padding:.4rem 0 .2rem .6rem}
@@ -137,7 +149,7 @@ nav .nav-links button.active,nav .nav-links button:hover{background:var(--gold);
 #advanced-settings-overlay.open{display:flex}
 .chapter-card .ch-badge{background:var(--night2);color:var(--gold);border-radius:20px;padding:5px 14px;font-size:.82rem;font-family:'Frank Ruhl Libre',serif;font-weight:700;letter-spacing:.02em;white-space:nowrap;cursor:pointer;transition:all .2s;border:none;text-align:right}
 .chapter-card .ch-badge:hover{background:var(--gold);color:var(--night);transform:translateY(-1px)}
-.chapter-card .ch-meta{font-size:.78rem;color:var(--text2);line-height:1.5}
+.chapter-card .ch-meta{font-size:.72rem;color:#aaa;line-height:1.5}
 .ch-right{display:flex;flex-direction:column;align-items:flex-start;gap:.35rem;flex-shrink:0}
 /* mobile: stack card vertically */
 @media(max-width:540px){
@@ -256,6 +268,7 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
   .prt-anchor{break-inside:avoid;page-break-inside:avoid;display:block}
   .prt-main-title{font-size:1.25rem;font-weight:700;color:#111827}
   .prt-sub-title{font-size:.85rem;color:#555;margin-top:.2rem}
+  .prt-personal-details{font-size:.72rem;color:#aaa;margin-top:.15rem}
   .prt-month-header{background:#1F293B!important;color:white!important;padding:.45rem .9rem;font-weight:700;font-size:.92rem;margin:1.1rem 0 .5rem;border-radius:4px;-webkit-print-color-adjust:exact;print-color-adjust:exact;break-after:avoid;page-break-after:avoid}
   .prt-pasuk{margin-bottom:.55rem;padding:.4rem .8rem;border-right:3px solid #C5A059;break-inside:avoid;page-break-inside:avoid}
   .prt-pasuk-num{font-size:.7em;color:#C5A059;font-weight:700;margin-bottom:.1rem}
@@ -347,7 +360,8 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
     <div style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:flex-start">
       <button class="btn-gold" onclick="toggleAddForm()">+ הוסף פרק</button>
       <button class="btn-outline" id="add-rabbi-btn" onclick="addRabbi()">✦ הוסף הרבי</button>
-      <button class="btn-outline" id="sort-btn" onclick="cycleSortMode()" title="מיון רשימה">⇅ מיון</button>
+      <button class="btn-outline" id="sort-age-btn-p" onclick="setSortMode('age')" title="מיון לפי גיל">↑ גיל</button>
+      <button class="btn-outline" id="sort-list-btn-p" onclick="setSortMode('list')" title="חזרה לסדר הרשימה">≡ רשימה</button>
       <button class="btn-outline" onclick="toggleAdvancedSettings()">⚙ הגדרות מתקדמות</button>
     </div>
   </div>
@@ -439,95 +453,108 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
 <div id="sec-print" class="section">
 <div class="page-layout-full">
   <div class="print-ui-only">
-    <div style="margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">
-      <h2 style="font-size:1rem;color:var(--night2);margin-bottom:0;font-weight:700">🖨️ הדפסה</h2>
-      <button class="btn-outline" id="sort-btn-print" onclick="cycleSortMode()" style="font-size:.78rem;padding:4px 12px">⇅ מיון</button>
-    </div>
+    <h2 style="font-size:1.1rem;color:var(--night2);margin-bottom:.8rem;font-weight:700">🖨️ הדפסה</h2>
 
-    <div style="background:white;border:1.5px solid var(--gold);border-radius:var(--radius);padding:1rem;margin-bottom:.6rem">
-      <label style="font-size:.82rem;font-weight:700;color:var(--night2);display:block;margin-bottom:.4rem">בחר סוג הדפסה:</label>
-      <select id="print-type-select" onchange="selectPrintOpt(parseInt(this.value))" style="padding:9px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.95rem;font-family:var(--ui-font);background:white;color:var(--night2);font-weight:600;width:100%;max-width:500px;cursor:pointer">
-        <option value="1">📖 לימוד נוכחי (הדפסת פסוקי החודש הנוכחי לכל פרק)</option>
-        <option value="2">📅 פרקים מלאים לכל השנה (כל החודשים ברצף עם טבלת חלוקה)</option>
-        <option value="3">📋 דף לסידור (פתק שמות ופרקים לתוך ספר התהילים)</option>
-      </select>
+    <!-- Type selector — horizontal pills -->
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem">
+      <button class="print-type-pill active" id="ptype-1" onclick="selectPrintOpt(1)">📖 לימוד נוכחי</button>
+      <button class="print-type-pill" id="ptype-2" onclick="selectPrintOpt(2)">📅 שנה מלאה</button>
+      <button class="print-type-pill" id="ptype-3" onclick="selectPrintOpt(3)">📋 דף לסידור</button>
     </div>
 
     <div class="print-config open" id="pconf-1">
-      <h4>לימוד נוכחי</h4>
-      <div class="print-type-desc">מדפיס את פסוקי הלימוד הנוכחיים (ראש החודש הנוכחי) לכל הפרקים שתבחר. סדר ההדפסה לפי סדר הפרקים ב"הפרקים שלי".</div>
-      <input class="psel-search" placeholder="🔍 חיפוש שם..." oninput="filterPsel(this,'psel-chapters-1')">
-      <div class="small" style="margin-bottom:.4rem">בחר פרקים להדפסה:</div>
-      <div class="chapter-select-list" id="psel-chapters-1"></div>
-      <div class="pconf-collapse-header" onclick="togglePconfSection('comm-1')">
-        <span>פירושים</span><span id="comm-1-arrow" class="pconf-arrow">▶</span>
-      </div>
-      <div id="comm-1" class="pconf-collapse-body" style="display:none">
-        <button class="btn-outline" style="font-size:.74rem;padding:3px 10px;margin-bottom:.5rem" onclick="toggleAllPrintComms(1)">☑ סמן/בטל הכל</button>
-        <div class="small" style="margin-bottom:.4rem">ספריא:</div>
-        <label class="check-row"><input type="checkbox" id="pchk-rashi"> רש״י</label>
-        <label class="check-row"><input type="checkbox" id="pchk-metzudot-david"> מצודת דוד</label>
-        <label class="check-row"><input type="checkbox" id="pchk-metzudot-zion"> מצודת ציון</label>
-        <label class="check-row"><input type="checkbox" id="pchk-radak"> רד״ק</label>
-        <label class="check-row"><input type="checkbox" id="pchk-ibnezra"> אבן עזרא</label>
-        <div class="small" style="margin-top:.5rem;margin-bottom:.4rem">רבותינו:</div>
-        <label class="check-row"><input type="checkbox" id="pchk-raboteinu"> פירושי רבותינו נשיאנו</label>
-        <label class="check-row"><input type="checkbox" id="pchk-chassidut"> עניין בחסידות</label>
-        <label class="check-row"><input type="checkbox" id="pchk-geula"> גאולה ומשיח</label>
-      </div>
-      <div style="margin-top:.7rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
-        <span class="small">גודל טקסט:</span>
-        <button class="font-size-btn" onclick="changePrintFontSize(-1)">−</button>
-        <span id="print-font-display" style="font-size:.78rem;min-width:35px;text-align:center;color:var(--text2)">100%</span>
-        <button class="font-size-btn" onclick="changePrintFontSize(1)">+</button>
+      <div class="print-type-desc">לימוד נוכחי — פסוקי ר"ח הנוכחי לכל פרק שתבחר</div>
+      <div class="pconf-row">
+        <div class="pconf-col">
+          <div class="pconf-label">בחר פרקים</div>
+          <input class="psel-search" placeholder="🔍 חיפוש..." oninput="filterPsel(this,'psel-chapters-1')">
+          <div class="chapter-select-list" id="psel-chapters-1"></div>
+        </div>
+        <div class="pconf-col">
+          <div class="pconf-label">פירושים <button class="pill-sm" onclick="toggleAllPrintComms(1)">☑ הכל</button></div>
+          <div class="pconf-label" style="font-size:.7rem;color:var(--text2);margin-bottom:.2rem">ספריא</div>
+          <div class="pill-checks">
+            <label class="check-pill"><input type="checkbox" id="pchk-rashi"> רש״י</label>
+            <label class="check-pill"><input type="checkbox" id="pchk-metzudot-david"> מצודת דוד</label>
+            <label class="check-pill"><input type="checkbox" id="pchk-metzudot-zion"> מצודת ציון</label>
+            <label class="check-pill"><input type="checkbox" id="pchk-radak"> רד״ק</label>
+            <label class="check-pill"><input type="checkbox" id="pchk-ibnezra"> אבן עזרא</label>
+          </div>
+          <div class="pconf-label" style="font-size:.7rem;color:var(--text2);margin-top:.4rem;margin-bottom:.2rem">רבותינו</div>
+          <div class="pill-checks">
+            <label class="check-pill"><input type="checkbox" id="pchk-raboteinu"> רבותינו נשיאנו</label>
+            <label class="check-pill"><input type="checkbox" id="pchk-chassidut"> חסידות</label>
+            <label class="check-pill"><input type="checkbox" id="pchk-geula"> גאולה ומשיח</label>
+          </div>
+          <div style="margin-top:.7rem;display:flex;align-items:center;gap:.4rem">
+            <span class="small">גודל:</span>
+            <button class="font-size-btn" onclick="changePrintFontSize(-1)">−</button>
+            <span id="print-font-display" style="font-size:.78rem;min-width:30px;text-align:center;color:var(--text2)">100%</span>
+            <button class="font-size-btn" onclick="changePrintFontSize(1)">+</button>
+            <button class="pill-sm" id="sort-age-btn" onclick="setSortMode('age')" style="margin-right:.2rem">↑ גיל</button><button class="pill-sm" id="sort-list-btn" onclick="setSortMode('list')">≡ רשימה</button>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="print-config" id="pconf-2">
-      <h4>פרקים מלאים לכל השנה</h4>
-      <div class="print-type-desc">מדפיס את כל הפרק לאורך כל השנה — כל החודשים ברצף עם הפסוקים שלהם, ובסוף טבלת חלוקה. מתאים ללמידה שנתית מתוך נייר.</div>
-      <input class="psel-search" placeholder="🔍 חיפוש שם..." oninput="filterPsel(this,'psel-chapters-2')">
-      <div class="small" style="margin-bottom:.4rem">בחר פרקים להדפסה:</div>
-      <div class="chapter-select-list" id="psel-chapters-2"></div>
-      <div class="pconf-collapse-header" onclick="togglePconfSection('comm-2')">
-        <span>פירושים</span><span id="comm-2-arrow" class="pconf-arrow">▶</span>
-      </div>
-      <div id="comm-2" class="pconf-collapse-body" style="display:none">
-        <button class="btn-outline" style="font-size:.74rem;padding:3px 10px;margin-bottom:.5rem" onclick="toggleAllPrintComms(2)">☑ סמן/בטל הכל</button>
-        <div class="small" style="margin-bottom:.4rem">ספריא:</div>
-        <label class="check-row"><input type="checkbox" id="pchk2-rashi"> רש״י</label>
-        <label class="check-row"><input type="checkbox" id="pchk2-metzudot-david"> מצודת דוד</label>
-        <label class="check-row"><input type="checkbox" id="pchk2-metzudot-zion"> מצודת ציון</label>
-        <label class="check-row"><input type="checkbox" id="pchk2-radak"> רד״ק</label>
-        <label class="check-row"><input type="checkbox" id="pchk2-ibnezra"> אבן עזרא</label>
-        <div class="small" style="margin-top:.5rem;margin-bottom:.4rem">רבותינו:</div>
-        <label class="check-row"><input type="checkbox" id="pchk2-raboteinu"> פירושי רבותינו נשיאנו</label>
-        <label class="check-row"><input type="checkbox" id="pchk2-chassidut"> עניין בחסידות</label>
-        <label class="check-row"><input type="checkbox" id="pchk2-geula"> גאולה ומשיח</label>
-      </div>
-      <div style="margin-top:.7rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
-        <span class="small">גודל טקסט:</span>
-        <button class="font-size-btn" onclick="changePrintFontSize(-1)">−</button>
-        <span id="print-font-display2" style="font-size:.78rem;min-width:35px;text-align:center;color:var(--text2)">100%</span>
-        <button class="font-size-btn" onclick="changePrintFontSize(1)">+</button>
+      <div class="print-type-desc">שנה מלאה — כל החודשים ברצף עם פסוקים וטבלת חלוקה</div>
+      <div class="pconf-row">
+        <div class="pconf-col">
+          <div class="pconf-label">בחר פרקים</div>
+          <input class="psel-search" placeholder="🔍 חיפוש..." oninput="filterPsel(this,'psel-chapters-2')">
+          <div class="chapter-select-list" id="psel-chapters-2"></div>
+        </div>
+        <div class="pconf-col">
+          <div class="pconf-label">פירושים <button class="pill-sm" onclick="toggleAllPrintComms(2)">☑ הכל</button></div>
+          <div class="pconf-label" style="font-size:.7rem;color:var(--text2);margin-bottom:.2rem">ספריא</div>
+          <div class="pill-checks">
+            <label class="check-pill"><input type="checkbox" id="pchk2-rashi"> רש״י</label>
+            <label class="check-pill"><input type="checkbox" id="pchk2-metzudot-david"> מצודת דוד</label>
+            <label class="check-pill"><input type="checkbox" id="pchk2-metzudot-zion"> מצודת ציון</label>
+            <label class="check-pill"><input type="checkbox" id="pchk2-radak"> רד״ק</label>
+            <label class="check-pill"><input type="checkbox" id="pchk2-ibnezra"> אבן עזרא</label>
+          </div>
+          <div class="pconf-label" style="font-size:.7rem;color:var(--text2);margin-top:.4rem;margin-bottom:.2rem">רבותינו</div>
+          <div class="pill-checks">
+            <label class="check-pill"><input type="checkbox" id="pchk2-raboteinu"> רבותינו נשיאנו</label>
+            <label class="check-pill"><input type="checkbox" id="pchk2-chassidut"> חסידות</label>
+            <label class="check-pill"><input type="checkbox" id="pchk2-geula"> גאולה ומשיח</label>
+          </div>
+          <div style="margin-top:.7rem;display:flex;align-items:center;gap:.4rem">
+            <span class="small">גודל:</span>
+            <button class="font-size-btn" onclick="changePrintFontSize(-1)">−</button>
+            <span id="print-font-display2" style="font-size:.78rem;min-width:30px;text-align:center;color:var(--text2)">100%</span>
+            <button class="font-size-btn" onclick="changePrintFontSize(1)">+</button>
+            <button class="pill-sm" onclick="setSortMode('age')" style="margin-right:.2rem">↑ גיל</button><button class="pill-sm" onclick="setSortMode('list')">≡ רשימה</button>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="print-config" id="pconf-3">
-      <h4>דף לסידור</h4>
-      <div class="print-type-desc">פתק קטן עם שמות, פרקים, גיל ויום ההולדת הבא — מתאים לגזירה והכנסה בתוך ספר התהילים.</div>
-      <input class="psel-search" placeholder="🔍 חיפוש שם..." oninput="filterPsel(this,'psel-chapters-3')">
-      <div class="small" style="margin-bottom:.6rem">בחר אנשים לכלול:</div>
-      <div class="chapter-select-list" id="psel-chapters-3"></div>
-      <label class="check-row" style="margin-top:.6rem">
-        <input type="checkbox" id="pchk3-fulltext">
-        הדפס גם את טקסט הפרק המלא (כל פרק בעמוד נפרד, ללא חלוקת חודשים)
-      </label>
-      <div style="margin-top:.7rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
-        <span class="small">גודל טקסט:</span>
-        <button class="font-size-btn" onclick="changePrintFontSize(-1)">−</button>
-        <span id="print-font-display3" style="font-size:.78rem;min-width:35px;text-align:center;color:var(--text2)">100%</span>
-        <button class="font-size-btn" onclick="changePrintFontSize(1)">+</button>
+      <div class="print-type-desc">דף לסידור — טבלת שמות ופרקים + אפשרות להדפסת טקסט מלא</div>
+      <div class="pconf-row">
+        <div class="pconf-col">
+          <div class="pconf-label">בחר אנשים</div>
+          <input class="psel-search" placeholder="🔍 חיפוש..." oninput="filterPsel(this,'psel-chapters-3')">
+          <div class="chapter-select-list" id="psel-chapters-3"></div>
+        </div>
+        <div class="pconf-col">
+          <div class="pconf-label">אפשרויות</div>
+          <div class="pill-checks" style="flex-direction:column;align-items:flex-start;gap:.4rem">
+            <label class="check-pill" style="width:auto"><input type="checkbox" id="pchk3-fulltext"> הדפס טקסט פרק מלא</label>
+            <label class="check-pill" style="width:auto"><input type="checkbox" id="pchk3-merge"> איחוד פרקים כפולים</label>
+          </div>
+          <div style="font-size:.7rem;color:var(--text2);margin-top:.3rem;line-height:1.4">איחוד: אם כמה אנשים לומדים אותו פרק — יודפס הפרק פעם אחת עם פירוט שמות וגילאים מתחת</div>
+          <div style="margin-top:.7rem;display:flex;align-items:center;gap:.4rem">
+            <span class="small">גודל:</span>
+            <button class="font-size-btn" onclick="changePrintFontSize(-1)">−</button>
+            <span id="print-font-display3" style="font-size:.78rem;min-width:30px;text-align:center;color:var(--text2)">100%</span>
+            <button class="font-size-btn" onclick="changePrintFontSize(1)">+</button>
+            <button class="pill-sm" onclick="setSortMode('age')" style="margin-right:.2rem">↑ גיל</button><button class="pill-sm" onclick="setSortMode('list')">≡ רשימה</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1176,22 +1203,30 @@ function toggleAllPrintComms(n){
 }
 
 // ── SORT MODE ──
-var _sortMode=0; // 0=manual, 1=psalm-asc, 2=psalm-desc
-var _sortLabels=['⇅ מיון','↑ פרק עולה','↓ פרק יורד'];
-function cycleSortMode(){
-  _sortMode=(_sortMode+1)%3;
-  var label=_sortLabels[_sortMode];
-  var btn=document.getElementById('sort-btn');if(btn)btn.textContent=label;
-  var btnP=document.getElementById('sort-btn-print');if(btnP)btnP.textContent=label;
+var _sortMode='list'; // 'list'=manual order, 'age'=by age ascending
+function setSortMode(mode){
+  _sortMode=mode;
+  // Update personal section buttons
+  var ba=document.getElementById('sort-age-btn-p');
+  var bl=document.getElementById('sort-list-btn-p');
+  if(ba)ba.style.fontWeight=mode==='age'?'700':'400';
+  if(bl)bl.style.fontWeight=mode==='list'?'700':'400';
+  // Update print buttons
+  document.querySelectorAll('#sort-age-btn,[id^="sort-age"]').forEach(function(b){b.style.fontWeight=mode==='age'?'700':'400';});
+  document.querySelectorAll('#sort-list-btn,[id^="sort-list"]').forEach(function(b){b.style.fontWeight=mode==='list'?'700':'400';});
   window._chCalc={};renderPersonal();
 }
+function cycleSortMode(){setSortMode(_sortMode==='list'?'age':'list');}
 function getSortedChapters(){
   var chs=getChapters();
-  if(_sortMode===0)return chs;
+  if(_sortMode==='list')return chs;
+  // Sort by age ascending (using _chCalc if available, else by birth year desc)
   return chs.slice().sort(function(a,b){
-    var pa=window._chCalc&&window._chCalc[a.id]?((window._chCalc[a.id].pdNew||window._chCalc[a.id].pd)||{p:999}).p:999;
-    var pb=window._chCalc&&window._chCalc[b.id]?((window._chCalc[b.id].pdNew||window._chCalc[b.id].pd)||{p:999}).p:999;
-    return _sortMode===1?pa-pb:pb-pa;
+    var ca=window._chCalc&&window._chCalc[a.id];
+    var cb=window._chCalc&&window._chCalc[b.id];
+    var ageA=ca?ca.age:-(a.by*12+a.bd);
+    var ageB=cb?cb.age:-(b.by*12+b.bd);
+    return ageA-ageB;
   });
 }
 
@@ -1516,7 +1551,7 @@ async function toggleFullChapter(){
 // ── PRINT ──
 var _printOpt=1;var _printCalcCache={};var _printFontSize=100;
 function changePrintFontSize(delta){_printFontSize=Math.max(60,Math.min(200,_printFontSize+delta*10));['print-font-display','print-font-display2','print-font-display3'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=_printFontSize+'%';});}
-function selectPrintOpt(n){_printOpt=n;var sel=document.getElementById('print-type-select');if(sel)sel.value=n;[1,2,3].forEach(function(i){var conf=document.getElementById('pconf-'+i);if(conf)conf.classList.toggle('open',i===n);});}
+function selectPrintOpt(n){_printOpt=n;[1,2,3].forEach(function(i){var pill=document.getElementById("ptype-"+i);if(pill)pill.classList.toggle("active",i===n);var conf=document.getElementById("pconf-"+i);if(conf)conf.classList.toggle("open",i===n);});}
 
 function renderPrintSection(){
   var chs=getChapters();
@@ -1678,7 +1713,11 @@ async function doPrintCurrent(output,dateStamp,today){
     var _pSegs=_pr[_pi]||c.ranges[c.idx];
     html+='<div style="break-inside:avoid;page-break-inside:avoid">';
     html+='<div class="prt-header"><div class="prt-main-title">תהילים — פרק '+gem(_pp.p)+'</div>';
-    html+='<div class="prt-sub-title">'+ch.name+' | לימוד ראש חודש '+_pml+' | חלק '+(_pi+1)+' מתוך '+_pm.length+'</div></div>';
+    var _nbDays2=daysToNextBD(c.nbGreg,today);
+    var _nbStr2=_nbDays2!==null?'יום הולדת הבא: '+formatCountdown(_nbDays2):'';
+    html+='<div class="prt-sub-title">'+ch.name+' | לימוד ראש חודש '+_pml+' | חלק '+(_pi+1)+' מתוך '+_pm.length+'</div>';
+    html+='<div class="prt-personal-details">גיל '+(c.ageNew||c.age)+(_nbStr2?' | '+_nbStr2:'')+'</div>';
+    html+='</div>';
     if(chCommKeys.length)html+=buildChCommHtml(chData,chCommKeys);
     html+='<div class="prt-month-header">ראש חודש '+monthLabel+' — פסוקים '+fmtSegs(segs).d+'</div>';
     if(allData.verses.length>0){html+=buildPasukHtml(allData.verses[0],allData.comm[allData.verses[0].ckey],commKeys);}
@@ -1718,7 +1757,11 @@ async function doPrintAnnual(output,dateStamp,today){
     }
     html+='<div style="break-inside:avoid;page-break-inside:avoid">';
     html+='<div class="prt-header"><div class="prt-main-title">תהילים — פרק '+gem(p)+'</div>';
-    html+='<div class="prt-sub-title">'+ch.name+' | מחזור לימוד '+c.numM+' חודשים</div></div>';
+    var _nbDays3=daysToNextBD(c.nbGreg,today);
+    var _nbStr3=_nbDays3!==null?'יום הולדת הבא: '+formatCountdown(_nbDays3):'';
+    html+='<div class="prt-sub-title">'+ch.name+' | מחזור לימוד '+c.numM+' חודשים</div>';
+    html+='<div class="prt-personal-details">גיל '+(c.ageNew||c.age)+(_nbStr3?' | '+_nbStr3:'')+'</div>';
+    html+='</div>';
     if(chCommKeys.length)html+=buildChCommHtml(chData,chCommKeys);
     html+=_firstMonthHtml+'</div>';
     for(var mi=0;mi<c.months.length;mi++){
@@ -1768,11 +1811,36 @@ async function doPrintSiddur(output,dateStamp,today){
     if(c.nbGreg){try{var nbH2=await g2h(c.nbGreg);if(nbH2&&nbH2.hd)nbHebStr=gem(nbH2.hd)+' '+hmn(nbH2.hm)+' '+hYearStr(nbH2.hy);}catch(e){}}
     rows.push({id:ch.id,name:ch.name,psalm:gem((c.pdNew||c.pd).p),psalmNum:(c.pdNew||c.pd).p,age:c.ageNew||c.age,nextBD:nbHebStr,daysTo:nbDays,bdPassed:c.bdMidCycle});
   }
+  var doMerge=document.getElementById('pchk3-merge')&&document.getElementById('pchk3-merge').checked;
   var html=dateStamp;
   html+='<div class="prt-header"><div class="prt-main-title">פרקי תהילים אישיים</div></div>';
-  html+='<table class="prt-siddur-table"><tr><th>שם</th><th>פרק</th><th>גיל</th><th>יום הולדת הבא</th></tr>';
-  rows.forEach(function(r){html+='<tr><td>'+r.name+'</td><td>'+r.psalm+'</td><td>'+r.age+'</td><td>'+(r.nextBD?r.nextBD+(r.daysTo!==null?' ('+formatCountdown(r.daysTo)+')':''):'—')+'</td></tr>';});
-  html+='</table>';
+  if(doMerge){
+    // Group rows by psalm number
+    var groups={};
+    rows.forEach(function(r){var k=r.psalmNum;if(!groups[k])groups[k]=[];groups[k].push(r);});
+    var psalms=Object.keys(groups).map(Number).sort(function(a,b){return a-b;});
+    // 2-column layout using a table with 2 prt-siddur-table cells side by side
+    var half=Math.ceil(psalms.length/2);
+    var col1=psalms.slice(0,half),col2=psalms.slice(half);
+    html+='<table style="width:100%;border-collapse:collapse"><tr><td style="width:50%;vertical-align:top;padding-left:.8rem">';
+    html+='<table class="prt-siddur-table" style="width:100%"><tr><th>פרק</th><th>לומדים</th></tr>';
+    col1.forEach(function(p){var g=groups[p];var names=g.map(function(r){return r.name+'<span style="font-size:.72em;color:#aaa;font-weight:400"> גיל '+r.age+(r.nextBD?' · '+r.nextBD:'')+'</span>'}).join('<br>');html+='<tr><td>'+gem(p)+'</td><td style="font-size:.78rem">'+names+'</td></tr>';});
+    html+='</table></td><td style="width:50%;vertical-align:top;padding-right:.8rem">';
+    html+='<table class="prt-siddur-table" style="width:100%"><tr><th>פרק</th><th>לומדים</th></tr>';
+    col2.forEach(function(p){var g=groups[p];var names=g.map(function(r){return r.name+'<span style="font-size:.72em;color:#aaa;font-weight:400"> גיל '+r.age+(r.nextBD?' · '+r.nextBD:'')+'</span>'}).join('<br>');html+='<tr><td>'+gem(p)+'</td><td style="font-size:.78rem">'+names+'</td></tr>';});
+    html+='</table></td></tr></table>';
+  }else{
+    // Standard 2-column layout
+    var half2=Math.ceil(rows.length/2);
+    var col1r=rows.slice(0,half2),col2r=rows.slice(half2);
+    html+='<table style="width:100%;border-collapse:collapse"><tr><td style="width:50%;vertical-align:top;padding-left:.8rem">';
+    html+='<table class="prt-siddur-table" style="width:100%"><tr><th>שם</th><th>פרק</th><th>גיל</th><th>יו"ה הבא</th></tr>';
+    col1r.forEach(function(r){html+='<tr><td>'+r.name+'</td><td>'+r.psalm+'</td><td>'+r.age+'</td><td>'+(r.nextBD?r.nextBD:'—')+'</td></tr>';});
+    html+='</table></td><td style="width:50%;vertical-align:top;padding-right:.8rem">';
+    html+='<table class="prt-siddur-table" style="width:100%"><tr><th>שם</th><th>פרק</th><th>גיל</th><th>יו"ה הבא</th></tr>';
+    col2r.forEach(function(r){html+='<tr><td>'+r.name+'</td><td>'+r.psalm+'</td><td>'+r.age+'</td><td>'+(r.nextBD?r.nextBD:'—')+'</td></tr>';});
+    html+='</table></td></tr></table>';
+  }
 
   // Full chapter text (optional)
   if(printFullText){
