@@ -123,7 +123,19 @@ nav .nav-links button.active,nav .nav-links button:hover{background:var(--gold);
 .ch-inline-actions button{padding:2px 8px;font-size:.7rem;border-radius:4px;cursor:pointer;font-family:var(--ui-font);border:1px solid var(--border);background:transparent;color:var(--text2);transition:all .15s}
 .ch-inline-actions button:hover{background:var(--cream);border-color:var(--gold2);color:var(--gold2)}
 .ch-inline-actions button.del-btn:hover{background:#fff0f0;color:#c00;border-color:#fcc}
-.chapter-card .ch-badge{display:inline-block;background:var(--night2);color:var(--gold);border-radius:20px;padding:5px 14px;font-size:.82rem;font-family:'Frank Ruhl Libre',serif;font-weight:700;letter-spacing:.02em;white-space:nowrap;cursor:pointer;transition:all .2s;border:none;text-align:right}
+.pconf-collapse-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:.4rem .6rem;background:var(--cream2);border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-weight:700;color:var(--night2);margin:.5rem 0;transition:background .15s}
+.pconf-collapse-header:hover{background:var(--cream);border-color:var(--gold)}
+.pconf-collapse-body{padding:.4rem 0 .2rem .6rem}
+.pconf-arrow{font-size:.7rem;color:var(--text2);transition:transform .2s}
+.pconf-arrow.open{transform:rotate(90deg)}
+.psel-search{width:100%;padding:6px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;margin-bottom:.4rem}
+.adv-section{margin-bottom:1.1rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.adv-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.adv-title{font-size:.88rem;font-weight:700;color:var(--night2);margin-bottom:.25rem}
+.adv-desc{font-size:.76rem;color:var(--text2);margin-bottom:.5rem;line-height:1.5}
+.adv-btn{padding:6px 14px;font-size:.82rem}
+#advanced-settings-overlay.open{display:flex}
+.chapter-card .ch-badge{background:var(--night2);color:var(--gold);border-radius:20px;padding:5px 14px;font-size:.82rem;font-family:'Frank Ruhl Libre',serif;font-weight:700;letter-spacing:.02em;white-space:nowrap;cursor:pointer;transition:all .2s;border:none;text-align:right}
 .chapter-card .ch-badge:hover{background:var(--gold);color:var(--night);transform:translateY(-1px)}
 .chapter-card .ch-meta{font-size:.78rem;color:var(--text2);line-height:1.5}
 .ch-right{display:flex;flex-direction:column;align-items:flex-start;gap:.35rem;flex-shrink:0}
@@ -240,7 +252,8 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
   #print-output{display:block!important}
   body{background:white!important;color:black!important}
   .prt-date-stamp{font-size:.72rem;color:#777;text-align:left;direction:ltr;margin-bottom:.5rem}
-  .prt-header{text-align:center;margin-bottom:1.2rem;padding-bottom:.7rem;border-bottom:2px solid #C5A059;break-after:avoid;page-break-after:avoid}
+  .prt-header{text-align:center;margin-bottom:1.2rem;padding-bottom:.7rem;border-bottom:2px solid #C5A059}
+  .prt-anchor{break-inside:avoid;page-break-inside:avoid;display:block}
   .prt-main-title{font-size:1.25rem;font-weight:700;color:#111827}
   .prt-sub-title{font-size:.85rem;color:#555;margin-top:.2rem}
   .prt-month-header{background:#1F293B!important;color:white!important;padding:.45rem .9rem;font-weight:700;font-size:.92rem;margin:1.1rem 0 .5rem;border-radius:4px;-webkit-print-color-adjust:exact;print-color-adjust:exact;break-after:avoid;page-break-after:avoid}
@@ -285,15 +298,7 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
   <span id="rc-banner-text"></span>
 </div>
 
-<!-- Dev simulation bar (hidden by default, toggle with Ctrl+Shift+D) -->
-<div id="dev-sim-bar" style="display:none;background:#2d1b00;color:#ffd;padding:.4rem 1rem;font-size:.76rem;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap">
-  <span style="font-weight:700;color:#ffa">🧪 סימולציה:</span>
-  <input type="date" id="sim-date-input" style="padding:3px 7px;border-radius:4px;border:none;font-size:.76rem">
-  <button onclick="setSimDate(document.getElementById('sim-date-input').value)" style="padding:3px 10px;background:#c9a84c;border:none;border-radius:4px;cursor:pointer;font-weight:700;font-size:.76rem">הגדר תאריך</button>
-  <button onclick="clearSimDate()" style="padding:3px 10px;background:#555;color:white;border:none;border-radius:4px;cursor:pointer;font-size:.76rem">חזור להיום</button>
-  <span id="sim-date-display" style="color:#ffa;font-size:.74rem"></span>
-</div>
-
+<!-- RC Banner -->
 <!-- ══════════════════ SEARCH SECTION ══════════════════ -->
 <div id="sec-search" class="section active">
 <div class="page-layout">
@@ -342,19 +347,48 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
     <div style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:flex-start">
       <button class="btn-gold" onclick="toggleAddForm()">+ הוסף פרק</button>
       <button class="btn-outline" id="add-rabbi-btn" onclick="addRabbi()">✦ הוסף הרבי</button>
-      <button class="btn-outline" onclick="exportChapters()" title="העתק רשימת פרקים">📤 העתק רשימה</button>
-      <button class="btn-outline" onclick="toggleImportPanel()" title="ייבוא רשימה מטקסט">📥 ייבוא</button>
+      <button class="btn-outline" id="sort-btn" onclick="cycleSortMode()" title="מיון רשימה">⇅ מיון</button>
+      <button class="btn-outline" onclick="toggleAdvancedSettings()">⚙ הגדרות מתקדמות</button>
     </div>
   </div>
 
-  <!-- Import panel -->
-  <div id="import-panel" style="display:none;background:#f0f4ff;border:1px solid #b0c0e0;border-radius:10px;padding:1rem;margin-bottom:1rem">
-    <div style="font-size:.9rem;font-weight:700;color:var(--night2);margin-bottom:.5rem">📥 ייבוא פרקים מטקסט</div>
-    <div style="font-size:.78rem;color:var(--text2);margin-bottom:.5rem">הדבק כאן את הטקסט (פורמט: שם,YYYY-MM-DD בכל שורה)</div>
-    <textarea id="import-textarea" rows="6" style="width:100%;padding:.6rem;border:1.5px solid #b0c0e0;border-radius:6px;font-family:monospace;font-size:.83rem;direction:ltr;text-align:left;resize:vertical" placeholder="ישראל,1990-04-18&#10;שרה,2000-01-15"></textarea>
-    <div style="display:flex;gap:.5rem;margin-top:.6rem">
-      <button class="btn-primary" onclick="importChapters()">ייבא</button>
-      <button class="btn-outline" onclick="toggleImportPanel()">ביטול</button>
+  <!-- Advanced Settings Modal -->
+  <div id="advanced-settings-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center;padding:1rem">
+    <div style="background:white;border-radius:14px;padding:1.5rem;max-width:440px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
+        <span style="font-size:1.1rem;font-weight:800;color:var(--night2)">⚙ הגדרות מתקדמות</span>
+        <button onclick="toggleAdvancedSettings()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text2);padding:0 4px">✕</button>
+      </div>
+
+      <div class="adv-section">
+        <div class="adv-title">📤 ייצוא פרקים</div>
+        <div class="adv-desc">מעתיק את רשימת הפרקים ללוח — פורמט שם,תאריך</div>
+        <button class="btn-outline adv-btn" onclick="exportChapters()">העתק רשימה</button>
+      </div>
+
+      <div class="adv-section">
+        <div class="adv-title">📥 ייבוא פרקים</div>
+        <div class="adv-desc">הדבק טקסט בפורמט שם,תאריך (לועזי או עברי)</div>
+        <textarea id="import-textarea" rows="5" style="width:100%;padding:.6rem;border:1.5px solid var(--border);border-radius:6px;font-family:monospace;font-size:.82rem;direction:ltr;text-align:left;resize:vertical;margin-bottom:.5rem" placeholder="ישראל,1990-04-18&#10;שרה,א בניסן תשפד&#10;יוסף,15/9/2000"></textarea>
+        <button class="btn-primary adv-btn" onclick="importChapters()">ייבא פרקים</button>
+      </div>
+
+      <div class="adv-section">
+        <div class="adv-title">🗓 סימולציית תאריך</div>
+        <div class="adv-desc">בדיקת תצוגה לתאריך אחר (לא משפיע על הנתונים)</div>
+        <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+          <input type="date" id="sim-date-input" style="padding:6px 9px;border:1.5px solid var(--border);border-radius:6px;font-size:.85rem">
+          <button class="btn-outline adv-btn" onclick="setSimDate(document.getElementById('sim-date-input').value)">הגדר</button>
+          <button class="btn-outline adv-btn" onclick="clearSimDate()">חזור להיום</button>
+        </div>
+        <div id="sim-date-display" style="font-size:.75rem;color:var(--gold2);margin-top:.3rem;font-weight:600"></div>
+      </div>
+
+      <div class="adv-section" style="border-top:2px solid #fde8e8;padding-top:1rem;margin-top:.5rem">
+        <div class="adv-title" style="color:#c00">🗑 ניקוי נתונים</div>
+        <div class="adv-desc">מחיקת כל הפרקים האישיים השמורים — פעולה בלתי הפיכה</div>
+        <button class="btn-outline adv-btn" style="border-color:#fcc;color:#c00" onclick="clearAllChapters()">מחק את כל הפרקים שלי</button>
+      </div>
     </div>
   </div>
 
@@ -405,8 +439,9 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
 <div id="sec-print" class="section">
 <div class="page-layout-full">
   <div class="print-ui-only">
-    <div style="margin-bottom:1rem">
-      <h2 style="font-size:1rem;color:var(--night2);margin-bottom:.3rem;font-weight:700">🖨️ הדפסה</h2>
+    <div style="margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">
+      <h2 style="font-size:1rem;color:var(--night2);margin-bottom:0;font-weight:700">🖨️ הדפסה</h2>
+      <button class="btn-outline" id="sort-btn-print" onclick="cycleSortMode()" style="font-size:.78rem;padding:4px 12px">⇅ מיון</button>
     </div>
 
     <div style="background:white;border:1.5px solid var(--gold);border-radius:var(--radius);padding:1rem;margin-bottom:.6rem">
@@ -421,18 +456,25 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
     <div class="print-config open" id="pconf-1">
       <h4>לימוד נוכחי</h4>
       <div class="print-type-desc">מדפיס את פסוקי הלימוד הנוכחיים (ראש החודש הנוכחי) לכל הפרקים שתבחר. סדר ההדפסה לפי סדר הפרקים ב"הפרקים שלי".</div>
+      <input class="psel-search" placeholder="🔍 חיפוש שם..." oninput="filterPsel(this,'psel-chapters-1')">
       <div class="small" style="margin-bottom:.4rem">בחר פרקים להדפסה:</div>
       <div class="chapter-select-list" id="psel-chapters-1"></div>
-      <div class="small" style="margin-bottom:.4rem;margin-top:.6rem">פירושי פסוקים (סעפריא):</div>
-      <label class="check-row"><input type="checkbox" id="pchk-rashi"> רש״י</label>
-      <label class="check-row"><input type="checkbox" id="pchk-metzudot-david"> מצודת דוד</label>
-      <label class="check-row"><input type="checkbox" id="pchk-metzudot-zion"> מצודת ציון</label>
-      <label class="check-row"><input type="checkbox" id="pchk-radak"> רד״ק</label>
-      <label class="check-row"><input type="checkbox" id="pchk-ibnezra"> אבן עזרא</label>
-      <div class="small" style="margin-top:.6rem;margin-bottom:.4rem">פירושי הפרק (רבותינו):</div>
-      <label class="check-row"><input type="checkbox" id="pchk-raboteinu"> פירושי רבותינו נשיאנו</label>
-      <label class="check-row"><input type="checkbox" id="pchk-chassidut"> עניין בחסידות על הפרק</label>
-      <label class="check-row"><input type="checkbox" id="pchk-geula"> גאולה ומשיח על הפרק</label>
+      <div class="pconf-collapse-header" onclick="togglePconfSection('comm-1')">
+        <span>פירושים</span><span id="comm-1-arrow" class="pconf-arrow">▶</span>
+      </div>
+      <div id="comm-1" class="pconf-collapse-body" style="display:none">
+        <button class="btn-outline" style="font-size:.74rem;padding:3px 10px;margin-bottom:.5rem" onclick="toggleAllPrintComms(1)">☑ סמן/בטל הכל</button>
+        <div class="small" style="margin-bottom:.4rem">ספריא:</div>
+        <label class="check-row"><input type="checkbox" id="pchk-rashi"> רש״י</label>
+        <label class="check-row"><input type="checkbox" id="pchk-metzudot-david"> מצודת דוד</label>
+        <label class="check-row"><input type="checkbox" id="pchk-metzudot-zion"> מצודת ציון</label>
+        <label class="check-row"><input type="checkbox" id="pchk-radak"> רד״ק</label>
+        <label class="check-row"><input type="checkbox" id="pchk-ibnezra"> אבן עזרא</label>
+        <div class="small" style="margin-top:.5rem;margin-bottom:.4rem">רבותינו:</div>
+        <label class="check-row"><input type="checkbox" id="pchk-raboteinu"> פירושי רבותינו נשיאנו</label>
+        <label class="check-row"><input type="checkbox" id="pchk-chassidut"> עניין בחסידות</label>
+        <label class="check-row"><input type="checkbox" id="pchk-geula"> גאולה ומשיח</label>
+      </div>
       <div style="margin-top:.7rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
         <span class="small">גודל טקסט:</span>
         <button class="font-size-btn" onclick="changePrintFontSize(-1)">−</button>
@@ -444,18 +486,25 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
     <div class="print-config" id="pconf-2">
       <h4>פרקים מלאים לכל השנה</h4>
       <div class="print-type-desc">מדפיס את כל הפרק לאורך כל השנה — כל החודשים ברצף עם הפסוקים שלהם, ובסוף טבלת חלוקה. מתאים ללמידה שנתית מתוך נייר.</div>
+      <input class="psel-search" placeholder="🔍 חיפוש שם..." oninput="filterPsel(this,'psel-chapters-2')">
       <div class="small" style="margin-bottom:.4rem">בחר פרקים להדפסה:</div>
       <div class="chapter-select-list" id="psel-chapters-2"></div>
-      <div class="small" style="margin-bottom:.4rem;margin-top:.4rem">פירושי פסוקים (סעפריא):</div>
-      <label class="check-row"><input type="checkbox" id="pchk2-rashi"> רש״י</label>
-      <label class="check-row"><input type="checkbox" id="pchk2-metzudot-david"> מצודת דוד</label>
-      <label class="check-row"><input type="checkbox" id="pchk2-metzudot-zion"> מצודת ציון</label>
-      <label class="check-row"><input type="checkbox" id="pchk2-radak"> רד״ק</label>
-      <label class="check-row"><input type="checkbox" id="pchk2-ibnezra"> אבן עזרא</label>
-      <div class="small" style="margin-top:.6rem;margin-bottom:.4rem">פירושי הפרק (רבותינו):</div>
-      <label class="check-row"><input type="checkbox" id="pchk2-raboteinu"> פירושי רבותינו נשיאנו</label>
-      <label class="check-row"><input type="checkbox" id="pchk2-chassidut"> עניין בחסידות על הפרק</label>
-      <label class="check-row"><input type="checkbox" id="pchk2-geula"> גאולה ומשיח על הפרק</label>
+      <div class="pconf-collapse-header" onclick="togglePconfSection('comm-2')">
+        <span>פירושים</span><span id="comm-2-arrow" class="pconf-arrow">▶</span>
+      </div>
+      <div id="comm-2" class="pconf-collapse-body" style="display:none">
+        <button class="btn-outline" style="font-size:.74rem;padding:3px 10px;margin-bottom:.5rem" onclick="toggleAllPrintComms(2)">☑ סמן/בטל הכל</button>
+        <div class="small" style="margin-bottom:.4rem">ספריא:</div>
+        <label class="check-row"><input type="checkbox" id="pchk2-rashi"> רש״י</label>
+        <label class="check-row"><input type="checkbox" id="pchk2-metzudot-david"> מצודת דוד</label>
+        <label class="check-row"><input type="checkbox" id="pchk2-metzudot-zion"> מצודת ציון</label>
+        <label class="check-row"><input type="checkbox" id="pchk2-radak"> רד״ק</label>
+        <label class="check-row"><input type="checkbox" id="pchk2-ibnezra"> אבן עזרא</label>
+        <div class="small" style="margin-top:.5rem;margin-bottom:.4rem">רבותינו:</div>
+        <label class="check-row"><input type="checkbox" id="pchk2-raboteinu"> פירושי רבותינו נשיאנו</label>
+        <label class="check-row"><input type="checkbox" id="pchk2-chassidut"> עניין בחסידות</label>
+        <label class="check-row"><input type="checkbox" id="pchk2-geula"> גאולה ומשיח</label>
+      </div>
       <div style="margin-top:.7rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
         <span class="small">גודל טקסט:</span>
         <button class="font-size-btn" onclick="changePrintFontSize(-1)">−</button>
@@ -467,6 +516,7 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
     <div class="print-config" id="pconf-3">
       <h4>דף לסידור</h4>
       <div class="print-type-desc">פתק קטן עם שמות, פרקים, גיל ויום ההולדת הבא — מתאים לגזירה והכנסה בתוך ספר התהילים.</div>
+      <input class="psel-search" placeholder="🔍 חיפוש שם..." oninput="filterPsel(this,'psel-chapters-3')">
       <div class="small" style="margin-bottom:.6rem">בחר אנשים לכלול:</div>
       <div class="chapter-select-list" id="psel-chapters-3"></div>
       <label class="check-row" style="margin-top:.6rem">
@@ -558,6 +608,7 @@ footer{background:var(--cream2);border-top:1px solid var(--border);padding:.7rem
       <!-- Row 2: ALL commentary toggles in one unified bar -->
       <div class="chapter-comm-bar" id="chapter-comm-bar-unified" style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.7rem;padding:.55rem .7rem;background:var(--cream2);border:1px solid var(--border);border-radius:var(--radius-sm);align-items:center">
         <span class="fc-label" style="margin-left:.2rem">פירושי פסוקים:</span>
+        <button class="tog-btn" onclick="toggleAllComms()" id="tog-all" title="סמן/בטל הכל">☑ הכל</button>
         <button class="tog-btn on" id="tog-rashi" onclick="toggleComm('rashi')">רש״י</button>
         <button class="tog-btn" id="tog-metzudot-david" onclick="toggleComm('metzudot-david')">מצודת דוד</button>
         <button class="tog-btn" id="tog-metzudot-zion" onclick="toggleComm('metzudot-zion')">מצודת ציון</button>
@@ -688,8 +739,8 @@ function buildStudyMonths(bm,bd,lastBY){
 // ── DATE SIMULATION ──
 var _simDate=null; // null = use real today
 function getToday(){var d=_simDate?new Date(_simDate):new Date();d.setHours(0,0,0,0);return d;}
-function setSimDate(d){_simDate=d;window._chCalc={};renderPersonal();updateRCBanner();}
-function clearSimDate(){_simDate=null;window._chCalc={};renderPersonal();updateRCBanner();}
+function setSimDate(d){if(!d){alert('בחר תאריך');return;}_simDate=d;window._chCalc={};renderPersonal();updateRCBanner();var sd=document.getElementById('sim-date-display');if(sd)sd.textContent='סימולציה פעילה: '+d;}
+function clearSimDate(){_simDate=null;window._chCalc={};renderPersonal();updateRCBanner();var sd=document.getElementById('sim-date-display');if(sd)sd.textContent='';}
 
 async function findIdx(months,ref){var idx=0;for(var i=0;i<months.length;i++){var g=await h2g(months[i].hy,months[i].hm,1);var d=g&&g.gy?new Date(g.gy,g.gm-1,g.gd):null;if(d&&d<=ref)idx=i;else break;}return idx;}
 async function calcForBirth(birthHM,birthHD,birthHY,refDate){
@@ -710,6 +761,13 @@ async function calcForBirth(birthHM,birthHD,birthHY,refDate){
   // --- DISPLAY psalm: use age (current Hebrew year, already passed birthday) ---
   var psalmAge=Math.min(age,149);
   var pd=PSALM_DATA[psalmAge];
+  if(!pd){
+    console.error('[calcForBirth] ❌ PSALM_DATA['+psalmAge+'] is undefined! age='+age+' lastBY='+lastBY+' birthHY='+birthHY+' bm='+birthHM+' bd='+birthHD);
+    // Clamp to valid range
+    psalmAge=Math.max(0,Math.min(149,psalmAge));
+    pd=PSALM_DATA[psalmAge];
+  }
+  console.log('[calcForBirth] pd='+pd.p+' psalmAge='+psalmAge+' age='+age+' lastBY='+lastBY+' birthHY='+birthHY);
   // Build study months and ranges based on current age
   var months=buildStudyMonths(birthHM,birthHD,lastBY);
   var numM=months.length;
@@ -753,6 +811,7 @@ async function calcForBirth(birthHM,birthHD,birthHY,refDate){
     // Recompute curRCGreg for new idx
     if(months[idx]){var crg2=await h2g(months[idx].hy,months[idx].hm,1);curRCGreg=crg2&&crg2.gy?new Date(crg2.gy,crg2.gm-1,crg2.gd):null;}
     // earlySwitch overrides any mid-cycle warning — show clean new month
+    console.log('[calcForBirth] earlySwitch',{name:'?',pd:pd&&pd.p,idx,month:months[idx]&&months[idx].hmn,daysToRC});
     return{pd,months,ranges,idx,numM,age,ageNew:age,pdNew:pd,lastBY,nextBY,bml,bmn2,birthHD,birthHM,nbGreg,daysToRC,nextMonthIdx,bdMidCycle:false,curRCGreg,showOldPsalmWarning:false,earlySwitch:true};
   }
   // --- Birthday-mid-cycle OR new cycle not yet started ---
@@ -766,6 +825,7 @@ async function calcForBirth(birthHM,birthHD,birthHY,refDate){
       var monthsOld=buildStudyMonths(birthHM,birthHD,lastBY-1);
       var rangesOld=distributeVerses(pdOld.v,monthsOld.length);
       var idxOld=await findIdx(monthsOld,refDate);
+      console.log('[calcForBirth] bdMidCycle',{pdOld:pdOld&&pdOld.p,pdNew:pd&&pd.p,idxOld});
       return{
         pd:pdOld,months:monthsOld,ranges:rangesOld,idx:idxOld,numM:monthsOld.length,
         age:age-1,ageNew:age,pdNew:pd,monthsNew:months,rangesNew:ranges,
@@ -774,6 +834,7 @@ async function calcForBirth(birthHM,birthHD,birthHY,refDate){
       };
     }
   }
+  console.log('[calcForBirth] normal',{pd:pd&&pd.p,idx,month:months[idx]&&months[idx].hmn,age,months:months.length});
   return{pd,months,ranges,idx,numM,age,ageNew:age,pdNew:pd,lastBY,nextBY,bml,bmn2,birthHD,birthHM,nbGreg,daysToRC,nextMonthIdx,bdMidCycle:false,curRCGreg,showOldPsalmWarning:false,earlySwitch:false};
 }
 function daysToNextBD(nbGreg,refDate){if(!nbGreg)return null;return Math.round((nbGreg-refDate)/(1000*60*60*24));}
@@ -872,11 +933,71 @@ function toggleTable(btn){
 
 // ── PERSONAL ──
 // ── EXPORT / IMPORT ──
-function toggleImportPanel(){
-  var p=document.getElementById('import-panel');
-  p.style.display=p.style.display==='none'?'block':'none';
-  if(p.style.display==='block')document.getElementById('import-textarea').focus();
+// ── PRINT SETTINGS ──
+function togglePconfSection(id){
+  var body=document.getElementById(id);
+  var arrow=document.getElementById(id+'-arrow');
+  var open=body.style.display==='none';
+  body.style.display=open?'block':'none';
+  if(arrow)arrow.classList.toggle('open',open);
 }
+
+function filterPsel(input,listId){
+  var q=input.value.trim().toLowerCase();
+  var list=document.getElementById(listId);
+  if(!list)return;
+  list.querySelectorAll('label').forEach(function(label){
+    label.style.display=(!q||label.textContent.toLowerCase().includes(q))?'':'none';
+  });
+}
+
+function savePrintSettings(){
+  try{
+    var s={
+      opt:_printOpt,fontSize:_printFontSize,
+      rashi:document.getElementById('pchk-rashi')&&document.getElementById('pchk-rashi').checked,
+      mD:document.getElementById('pchk-metzudot-david')&&document.getElementById('pchk-metzudot-david').checked,
+      mZ:document.getElementById('pchk-metzudot-zion')&&document.getElementById('pchk-metzudot-zion').checked,
+      radak:document.getElementById('pchk-radak')&&document.getElementById('pchk-radak').checked,
+      ibnezra:document.getElementById('pchk-ibnezra')&&document.getElementById('pchk-ibnezra').checked,
+      raboteinu:document.getElementById('pchk-raboteinu')&&document.getElementById('pchk-raboteinu').checked,
+      chassidut:document.getElementById('pchk-chassidut')&&document.getElementById('pchk-chassidut').checked,
+      geula:document.getElementById('pchk-geula')&&document.getElementById('pchk-geula').checked,
+      fulltext:document.getElementById('pchk3-fulltext')&&document.getElementById('pchk3-fulltext').checked
+    };
+    localStorage.setItem('kapitel_print_settings',JSON.stringify(s));
+  }catch(e){}
+}
+
+function loadPrintSettings(){
+  try{
+    var raw=localStorage.getItem('kapitel_print_settings');
+    if(!raw)return;
+    var s=JSON.parse(raw);
+    if(s.opt)showPrintOpt(s.opt);
+    if(s.fontSize)_printFontSize=s.fontSize;
+    ['rashi','mD','mZ','radak','ibnezra','raboteinu','chassidut','geula'].forEach(function(k){
+      var el=document.getElementById('pchk-'+k);
+      if(el&&s[k]!==undefined)el.checked=s[k];
+    });
+    var ft=document.getElementById('pchk3-fulltext');
+    if(ft&&s.fulltext!==undefined)ft.checked=s.fulltext;
+  }catch(e){}
+}
+
+function toggleAdvancedSettings(){
+  var el=document.getElementById('advanced-settings-overlay');
+  var open=el.classList.toggle('open');
+  el.style.display=open?'flex':'none';
+  if(open){var sd=document.getElementById('sim-date-display');if(sd)sd.textContent=_simDate?'סימולציה פעילה: '+_simDate:'';}
+}
+
+function clearAllChapters(){
+  if(!confirm('בטוח? פעולה זו תמחק את כל הפרקים האישיים שלך ואינה ניתנת לביטול.'))return;
+  saveChapters([]);window._chCalc={};toggleAdvancedSettings();renderPersonal();
+}
+
+function toggleImportPanel(){toggleAdvancedSettings();}
 
 async function exportChapters(){
   var chs=getChapters();
@@ -1027,7 +1148,51 @@ async function importChapters(){
   msg+='\n\nהוסף לפרקים הקיימים?';
   if(!confirm(msg))return;
   saveChapters(getChapters().concat(toImport));
-  ta.value='';toggleImportPanel();renderPersonal();
+  ta.value='';toggleAdvancedSettings();renderPersonal();
+}
+
+function toggleAllComms(){
+  var keys=['rashi','metzudot-david','metzudot-zion','radak','ibnezra'];
+  var allOn=keys.every(function(k){return activeComms[k];});
+  keys.forEach(function(k){
+    activeComms[k]=!allOn;
+    var el=document.getElementById('tog-'+k);if(el)el.classList.toggle('on',!allOn);
+    document.querySelectorAll('.comm-item.'+k).forEach(function(el){el.style.display=!allOn?'block':'none';});
+  });
+  var chKeys=['raboteinu','geula_mashiach','chassidut_meuvad'];
+  chKeys.forEach(function(k){
+    var on=!allOn;
+    var btn=document.getElementById('btn-'+k);
+    if(btn&&btn.style.display!=='none'){btn.classList.toggle('on',on);document.querySelectorAll('.ch-comm-item.'+k).forEach(function(el){el.style.display=on?'block':'none';});}
+  });
+  var togAll=document.getElementById('tog-all');if(togAll)togAll.classList.toggle('on',!allOn);
+}
+
+function toggleAllPrintComms(n){
+  var prefix=n===1?'pchk-':'pchk'+n+'-';
+  var ids=[prefix+'rashi',prefix+'metzudot-david',prefix+'metzudot-zion',prefix+'radak',prefix+'ibnezra',prefix+'raboteinu',prefix+'chassidut',prefix+'geula'];
+  var allChecked=ids.every(function(id){var el=document.getElementById(id);return el&&el.checked;});
+  ids.forEach(function(id){var el=document.getElementById(id);if(el)el.checked=!allChecked;});
+}
+
+// ── SORT MODE ──
+var _sortMode=0; // 0=manual, 1=psalm-asc, 2=psalm-desc
+var _sortLabels=['⇅ מיון','↑ פרק עולה','↓ פרק יורד'];
+function cycleSortMode(){
+  _sortMode=(_sortMode+1)%3;
+  var label=_sortLabels[_sortMode];
+  var btn=document.getElementById('sort-btn');if(btn)btn.textContent=label;
+  var btnP=document.getElementById('sort-btn-print');if(btnP)btnP.textContent=label;
+  window._chCalc={};renderPersonal();
+}
+function getSortedChapters(){
+  var chs=getChapters();
+  if(_sortMode===0)return chs;
+  return chs.slice().sort(function(a,b){
+    var pa=window._chCalc&&window._chCalc[a.id]?((window._chCalc[a.id].pdNew||window._chCalc[a.id].pd)||{p:999}).p:999;
+    var pb=window._chCalc&&window._chCalc[b.id]?((window._chCalc[b.id].pdNew||window._chCalc[b.id].pd)||{p:999}).p:999;
+    return _sortMode===1?pa-pb:pb-pa;
+  });
 }
 
 function getChapters(){try{return JSON.parse(localStorage.getItem('tehillim_chapters')||'[]');}catch(e){return[];}}
@@ -1052,13 +1217,22 @@ async function renderPersonal(){
   if(rabbiBtn)rabbiBtn.style.display=chs.find(function(c){return c.name==='הרבי';})?'none':'';
   if(chs.length===0){list.innerHTML='<div class="small" style="padding:1.5rem;text-align:center;color:var(--text2)">אין פרקים שמורים. לחץ "הוסף פרק" להתחלה.</div>';
     var sub=document.getElementById('personal-rc-subtitle');if(sub)sub.textContent='';return;}
-  list.innerHTML='<div class="loading">⏳ מחשב...</div>';
+  list.innerHTML='';
   var today=getToday();
-  window._chCalc=window._chCalc||{};
+  window._chCalc={};
   var _rcSubtitleSet=false;
-  for(var i=0;i<chs.length;i++){
-    var ch=chs[i];
-    var c=await calcForBirth(ch.bm,ch.bd,ch.by,today);
+  // Build psalm-count map for duplicate detection
+  var _psalmCount={};
+  chs.forEach(function(ch){if(window._chCalc&&window._chCalc[ch.id]){var p=(window._chCalc[ch.id].pdNew||window._chCalc[ch.id].pd);if(p)_psalmCount[p.p]=(_psalmCount[p.p]||0)+1;}});
+  var displayChs=getSortedChapters();
+  for(var i=0;i<displayChs.length;i++){
+    var ch=displayChs[i];
+    var c;
+    try{
+      c=await calcForBirth(ch.bm,ch.bd,ch.by,today);
+      if(!c||!c.pd){console.error('[renderPersonal] ❌ calc returned null/no pd for',ch.name,{bm:ch.bm,bd:ch.bd,by:ch.by});continue;}
+      console.log('[renderPersonal] ✅',ch.name,'→ פרק',c.pd.p,'idx',c.idx,'months',c.months.length,'earlySwitch',c.earlySwitch,'bdMidCycle',c.bdMidCycle);
+    }catch(e){console.error('[renderPersonal] ❌ exception for',ch.name,e);continue;}
     if(!_rcSubtitleSet){
       _rcSubtitleSet=true;
       var sub=document.getElementById('personal-rc-subtitle');
@@ -1396,6 +1570,7 @@ async function doPrint(asPdf){
   var goBtn=document.getElementById('print-go-btn');
   var pdfBtn=document.getElementById('pdf-go-btn');
   if(goBtn)goBtn.disabled=true;if(pdfBtn)pdfBtn.disabled=true;
+  savePrintSettings();
   // Check for mid-cycle birthdays and show confirmation
   var today=getToday();
   var chs=getChapters();
@@ -1485,7 +1660,7 @@ async function doPrintCurrent(output,dateStamp,today){
   for(var xi=0;xi<ids.length;xi++){
     var ch=chs.find(function(c){return c.id===ids[xi];});if(!ch)continue;
     updatePrintProgress('טוען פסוקים: '+ch.name+' ('+(xi+1)+'/'+ids.length+')',20+Math.round(70*xi/Math.max(ids.length-1,1)));
-    var c=window._chCalc&&window._chCalc[ch.id]?window._chCalc[ch.id]:await calcForBirth(ch.bm,ch.bd,ch.by,today);
+    var c=await calcForBirth(ch.bm,ch.bd,ch.by,today);
     var segs=c.ranges[c.idx];var curM=c.months[c.idx];var monthLabel=curM.hmn+' '+hYearStr(curM.hy);
     // Override with updated data if birthday mid-cycle
     if(c.bdMidCycle&&c.monthsNew&&c.rangesNew){segs=(c.rangesNew[Math.min(c.idx,c.rangesNew.length-1)]||segs);curM=(c.monthsNew[Math.min(c.idx,c.monthsNew.length-1)]||curM);monthLabel=curM.hmn+' '+hYearStr(curM.hy);}
@@ -1523,8 +1698,11 @@ async function doPrintAnnual(output,dateStamp,today){
   for(var xi=0;xi<ids.length;xi++){
     var ch=chs.find(function(c){return c.id===ids[xi];});if(!ch)continue;
     updatePrintProgress('טוען פרק: '+ch.name,20+Math.round(70*xi/Math.max(ids.length-1,1)));
-    var c=window._chCalc&&window._chCalc[ch.id]?window._chCalc[ch.id]:await calcForBirth(ch.bm,ch.bd,ch.by,today);
-    var p=c.pd.p;var totalV=PSALM_DATA[p-1].v;
+    var c=await calcForBirth(ch.bm,ch.bd,ch.by,today);
+    if(!c||!c.pd){console.error('[doPrintAnnual] ❌ no pd for',ch.name,c);continue;}
+    var p=(c.pdNew||c.pd).p;
+    console.log('[doPrintAnnual]',ch.name,'→ psalm',p,'PSALM_DATA entry:',PSALM_DATA[p-1]);
+    var totalV=PSALM_DATA[p-1]?PSALM_DATA[p-1].v:10;
     var fullData=await fetchVerseData(p,1,totalV);
     var chData=allRab[String(p)];
     if(!isFirst)html+='<div style="margin-top:2rem;border-top:1px solid #e0dac8"></div>';isFirst=false;
@@ -1584,7 +1762,7 @@ async function doPrintSiddur(output,dateStamp,today){
   var printFullText=document.getElementById('pchk3-fulltext')&&document.getElementById('pchk3-fulltext').checked;
   updatePrintProgress('מחשב...',30);var rows=[];var calcMap={};
   for(var i=0;i<chs.length;i++){
-    var ch=chs[i];var c=window._chCalc&&window._chCalc[ch.id]?window._chCalc[ch.id]:await calcForBirth(ch.bm,ch.bd,ch.by,today);
+    var ch=chs[i];var c=await calcForBirth(ch.bm,ch.bd,ch.by,today);
     calcMap[ch.id]=c;
     var nbDays=daysToNextBD(c.nbGreg,today);var nbHebStr='';
     if(c.nbGreg){try{var nbH2=await g2h(c.nbGreg);if(nbH2&&nbH2.hd)nbHebStr=gem(nbH2.hd)+' '+hmn(nbH2.hm)+' '+hYearStr(nbH2.hy);}catch(e){}}
@@ -1601,6 +1779,7 @@ async function doPrintSiddur(output,dateStamp,today){
     updatePrintProgress('טוען פסוקים...',60);
     for(var ri=0;ri<rows.length;ri++){
       var row=rows[ri];var pNum=row.psalmNum;
+      if(!pNum||!PSALM_DATA[pNum-1]){html+='<div class="err">שגיאה: פרק '+pNum+'</div>';continue;}
       var totalV=PSALM_DATA[pNum-1].v;
       try{
         var fd=await fetchVerseData(pNum,1,totalV);
@@ -1645,19 +1824,8 @@ function updateRCBanner(){
   }else{
     banner.style.display='none';
   }
-  // Update sim bar display
-  var sd=document.getElementById('sim-date-display');
-  if(sd)sd.textContent=_simDate?'תאריך סימולציה: '+_simDate:'תאריך אמיתי: היום';
 }
 
-// Ctrl+Shift+D toggles dev sim bar
-document.addEventListener('keydown',function(e){
-  if(e.ctrlKey&&e.shiftKey&&e.key==='D'){
-    var bar=document.getElementById('dev-sim-bar');
-    if(bar)bar.style.display=bar.style.display==='none'?'flex':'none';
-    e.preventDefault();
-  }
-});
 
 function showSection(s,skipRender){
   document.querySelectorAll('.section').forEach(function(el){el.classList.remove('active');});
@@ -1726,6 +1894,7 @@ window.onload=async function(){
   var hy=document.getElementById('heb-year');
   if(hy){hy.addEventListener('input',function(){var n=parseInt(this.value);var el=document.getElementById('heb-year-letters');if(el)el.textContent=n>=5000&&n<=6000?hYearStr(n):'';});}
   await loadFromHash();
+  loadPrintSettings();
   renderPersonal();
   if(!window.location.hash && getChapters().length>0){
     showSection('personal', true);
