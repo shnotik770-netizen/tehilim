@@ -1872,7 +1872,9 @@ function renderDedication(){
   if(ded.type_title||ded.main_name)html+='<div class="ded-sep"></div>';
   if(ded.type_title)html+='<div class="ded-type-title">'+ded.type_title+'</div>';
   if(ded.main_name)html+='<div class="ded-main-name">'+ded.main_name+'</div>';
-  if(ded.content_lines&&ded.content_lines.length){ded.content_lines.forEach(function(l){if(l)html+='<div class="ded-line">'+l+'</div>';});}
+  if(ded.father_name)html+='<div class="ded-line">'+ded.father_name+'</div>';
+  if(ded.family_name)html+='<div class="ded-line">'+ded.family_name+'</div>';
+  if(ded.passing_date)html+='<div class="ded-line">'+ded.passing_date+'</div>';
   if(ded.footer_text){html+='<div class="ded-sep"></div><div class="ded-footer">'+ded.footer_text+'</div>';}
   if(deds.length>1){html+='<div class="ded-dots">';deds.forEach(function(d,i){html+='<div class="ded-dot'+(i===_dedIdx?' active':'')+'" onclick="_dedIdx='+i+';renderDedication()"></div>';});html+='</div>';}
   html+='</div></div>';
@@ -1884,7 +1886,9 @@ function renderDedication(){
   if(ded.subtitle)parts.push(ded.subtitle);
   if(ded.type_title)parts.push(ded.type_title);
   if(ded.main_name)parts.push('<strong>'+ded.main_name+'</strong>');
-  if(ded.content_lines&&ded.content_lines.length)ded.content_lines.forEach(function(l){if(l&&l.trim())parts.push(l.trim());});
+  if(ded.father_name)parts.push(ded.father_name);
+  if(ded.family_name)parts.push(ded.family_name);
+  if(ded.passing_date)parts.push(ded.passing_date);
   if(ded.footer_text)parts.push(ded.footer_text);
   window._dedSimpleText=parts.join(' | ');
   var fdt=document.getElementById('footer-ded-text');if(fdt)fdt.innerHTML=window._dedSimpleText;
